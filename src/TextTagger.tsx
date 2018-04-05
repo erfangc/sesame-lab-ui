@@ -139,7 +139,7 @@ export class TextTagger extends React.Component<Props, State> {
             new entity
              */
             this.setState(() => {
-                    const newEntity = {end: token.idx, start: token.idx, id: guid(), type: 'unknown', color: '#999'};
+                    const newEntity = {end: token.idx, start: token.idx, id: guid(), type: 'unknown'};
                     return {entityUnderEdit: newEntity};
                 }
             );
