@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Container} from 'semantic-ui-react';
 import {Header} from './header/Header';
-import {Workspace} from './workspace/Workspace';
+import {Train} from './train/Train';
 
 class App extends React.Component {
     render() {
@@ -9,7 +9,7 @@ class App extends React.Component {
             <div>
                 <Header/>
                 <Container style={{marginTop: '7em'}}>
-                    <Workspace/>
+                    <Train/>
                 </Container>
             </div>
         );

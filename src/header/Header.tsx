@@ -16,9 +16,10 @@ export const Header = connect(mapStateToProps)(
             return (
                 <Menu fixed={'top'} inverted>
                     <Container>
-                        <Menu.Item as={'a'}>My Profile</Menu.Item>
-                        <Menu.Item as={'a'}>Workspace</Menu.Item>
-                        <Menu.Item as={'a'}>Browse</Menu.Item>
+                        <Menu.Item as={'a'}>Train</Menu.Item>
+                        <Menu.Item as={'a'}>Browse Traning Data Set</Menu.Item>
+                        <Menu.Item as={'a'}>Create a Model</Menu.Item>
+                        <Menu.Item as={'a'}>Test</Menu.Item>
                     </Container>
                 </Menu>
             );

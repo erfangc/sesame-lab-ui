@@ -13,7 +13,7 @@ function mapStateToProps({entityConfig}: StoreState): StateProps {
     return {entityConfig};
 }
 
-export const Workspace = connect(mapStateToProps)(
+export const Train = connect(mapStateToProps)(
     class Workspace extends React.Component<StateProps> {
         render(): React.ReactNode {
             const {entityConfig} = this.props;
