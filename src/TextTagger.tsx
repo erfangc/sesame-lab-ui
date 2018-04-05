@@ -3,11 +3,19 @@ import {Menu} from 'semantic-ui-react';
 
 interface Props {
     annotatedText: string
+    onChange: (newText: string) => void
+    entityConfig: { [type: string]: EntityConfig }
 }
 
 interface Token {
     idx: number
     content: string
+}
+
+interface EntityConfig {
+    displayName: string
+    color: string
+    textColor: string
 }
 
 interface Entity {
@@ -24,10 +32,19 @@ interface State {
     entities: Entity[]
 }
 
+/**
+ * TextTagger is a component that accepts annotated text (either annotated by an NER algorithm or by a human)
+ * and enables a user to use the mouse to edit the annotations
+ *
+ * each submission from this component represents an attempt to manually label the sentence for future training
+ */
 export class TextTagger extends React.Component<Props, State> {
 
     getInitialState(props: Props) {
         const {tokens, entities} = textToToken(props.annotatedText);
+        /*
+        populate colors
+         */
         return {
             entityUnderEdit: undefined,
             menu: undefined,
@@ -42,38 +59,39 @@ export class TextTagger extends React.Component<Props, State> {
     }
 
     confirmEdit = (type: string) => this.setState(({entityUnderEdit, entities, menu}) => {
-        /*
-        either we have a new entity or we are updating an existing entity
-         */
-        if (!entityUnderEdit) {
-            return {entityUnderEdit, entities, menu};
-        }
-        const isNew = entities.find(({id}) => id === entityUnderEdit.id) === undefined;
-        if (isNew) {
-            return {
-                entityUnderEdit: undefined,
-                entities: [
-                    ...entities,
-                    {
-                        ...entityUnderEdit, type
-                    }
-                ],
-                menu: undefined
-            };
-        } else {
-            return {
-                entityUnderEdit: undefined,
-                entities: entities.map((entity) => {
-                    if (entity.id === entityUnderEdit.id) {
-                        return {...entityUnderEdit, type};
-                    } else {
-                        return entity;
-                    }
-                }),
-                menu: undefined
-            };
-        }
-    });
+            /*
+            either we have a new entity or we are updating an existing entity
+             */
+            if (!entityUnderEdit) {
+                return {entityUnderEdit, entities, menu};
+            }
+            const isNew = entities.find(({id}) => id === entityUnderEdit.id) === undefined;
+            if (isNew) {
+                return {
+                    entityUnderEdit: undefined,
+                    entities: [
+                        ...entities,
+                        {
+                            ...entityUnderEdit, type
+                        }
+                    ],
+                    menu: undefined
+                };
+            } else {
+                return {
+                    entityUnderEdit: undefined,
+                    entities: entities.map((entity) => {
+                        if (entity.id === entityUnderEdit.id) {
+                            return {...entityUnderEdit, type};
+                        } else {
+                            return entity;
+                        }
+                    }),
+                    menu: undefined
+                };
+            }
+        },
+        () => this.props.onChange(tokenToText({entities: this.state.entities, tokens: this.state.tokens})));
 
     cancelEdit = () => this.setState(({entityUnderEdit}) => {
         if (!entityUnderEdit) {
@@ -92,21 +110,23 @@ export class TextTagger extends React.Component<Props, State> {
     };
 
     deleteEntity = () => this.setState(({entityUnderEdit, entities, menu}) => {
-        if (!entityUnderEdit) {
-            return {entityUnderEdit, entities, menu};
-        } else {
-            const isNew = entities.find(({id}) => id === entityUnderEdit.id) === undefined;
-            if (isNew) {
-                return {entityUnderEdit: undefined, entities, menu: undefined};
+            if (!entityUnderEdit) {
+                return {entityUnderEdit, entities, menu};
             } else {
-                return {
-                    entityUnderEdit: undefined,
-                    entities: entities.filter((entity) => entity.id !== entityUnderEdit.id),
-                    menu: undefined
-                };
+                const isNew = entities.find(({id}) => id === entityUnderEdit.id) === undefined;
+                if (isNew) {
+                    return {entityUnderEdit: undefined, entities, menu: undefined};
+                } else {
+                    return {
+                        entityUnderEdit: undefined,
+                        entities: entities.filter((entity) => entity.id !== entityUnderEdit.id),
+                        menu: undefined
+                    };
+                }
             }
-        }
-    });
+        },
+        () => this.props.onChange(tokenToText({tokens: this.state.tokens, entities: this.state.entities}))
+    );
 
     startEntityEdit = (token: Token) => {
         const {entityUnderEdit} = this.state;
@@ -119,7 +139,7 @@ export class TextTagger extends React.Component<Props, State> {
             new entity
              */
             this.setState(() => {
-                    const newEntity = {end: token.idx, start: token.idx, id: guid(), type: 'unknown'};
+                    const newEntity = {end: token.idx, start: token.idx, id: guid(), type: 'unknown', color: '#999'};
                     return {entityUnderEdit: newEntity};
                 }
             );
@@ -149,22 +169,36 @@ export class TextTagger extends React.Component<Props, State> {
         return {entityUnderEdit: {...entityUnderEdit, end: Math.max(entityUnderEdit.start, token.idx - 1)}};
     });
 
-    resolveTokenClass = (token: Token): string | undefined => {
-        // if the given token is currently edited, its class belongs that that
+    resolveTokenStyle = (token: Token): any => {
+        const {entityConfig} = this.props;
+        /*
+        if the given token is currently being edited, its class is determined by the entity being edited
+         */
         const {entityUnderEdit} = this.state;
         if (entityUnderEdit !== undefined && token.idx >= entityUnderEdit.start && token.idx <= entityUnderEdit.end) {
-            return entityUnderEdit.type;
+            return {
+                backgroundColor: entityConfig[entityUnderEdit.type].color,
+                color: entityConfig[entityUnderEdit.type].textColor
+            };
         } else {
             const resolvedEntity = this.resolveTokenEntity(token);
             if (resolvedEntity !== undefined) {
                 /*
-                if the resolved entity is the one being edited, also return undefined
-                because this implies the user has de-selected the token
+                if the resolved entity is also the one being edited, also return undefined
+                reaching this code path implies the user has de-selected the token
                  */
                 if (entityUnderEdit !== undefined && resolvedEntity.id === entityUnderEdit.id) {
                     return undefined;
+                } else {
+                    /*
+                    this code path means this token belongs to an entity and that entity is not being edited,
+                    so its class is naturally that of the entity
+                     */
+                    return {
+                        backgroundColor: entityConfig[resolvedEntity.type].color,
+                        color: entityConfig[resolvedEntity.type].textColor
+                    };
                 }
-                return resolvedEntity.type;
             } else {
                 return undefined;
             }
@@ -172,6 +206,7 @@ export class TextTagger extends React.Component<Props, State> {
     };
 
     render(): React.ReactNode {
+        const {entityConfig} = this.props;
         const {tokens, menu} = this.state;
         const spans = tokens
             .map((token) => {
@@ -180,7 +215,7 @@ export class TextTagger extends React.Component<Props, State> {
                         <React.Fragment key={idx}>
                             <span
                                 key={idx}
-                                className={this.resolveTokenClass(token)}
+                                style={this.resolveTokenStyle(token)}
                                 onClick={
                                     e => {
                                         const {entityUnderEdit} = this.state;
@@ -210,8 +245,19 @@ export class TextTagger extends React.Component<Props, State> {
                     menu !== undefined ?
                         <div style={{position: 'absolute', top: menu.y + 10, left: menu.x}}>
                             <Menu vertical>
-                                <Menu.Item onClick={() => this.confirmEdit('firm')}>Firm</Menu.Item>
-                                <Menu.Item onClick={() => this.confirmEdit('family')}>Family</Menu.Item>
+                                {
+                                    Object
+                                        .keys(entityConfig)
+                                        .filter(entity => entity !== 'unknown')
+                                        .map(entity =>
+                                            <Menu.Item
+                                                key={entity}
+                                                onClick={() => this.confirmEdit(entity)}
+                                            >
+                                                {entityConfig[entity].displayName}
+                                            </Menu.Item>
+                                        )
+                                }
                                 <Menu.Item
                                     onClick={() => {
                                         this.setState(() => ({menu: undefined}));
@@ -220,11 +266,7 @@ export class TextTagger extends React.Component<Props, State> {
                                 >
                                     Cancel
                                 </Menu.Item>
-                                <Menu.Item
-                                    color={'red'}
-                                    icon={'remove'}
-                                    onClick={() => this.deleteEntity()}
-                                >
+                                <Menu.Item onClick={() => this.deleteEntity()}>
                                     Delete
                                 </Menu.Item>
                             </Menu>
@@ -234,6 +276,45 @@ export class TextTagger extends React.Component<Props, State> {
             </div>
         );
     }
+}
+
+/**
+ * convert tokens and entities objects to string
+ * @return {string}
+ * @param args
+ */
+function tokenToText(args: { tokens: Token[], entities: Entity[] }): string {
+    const {entities, tokens} = args;
+    /*
+    sort the entities by 'start'
+     */
+    const stringFragments: string[] = [];
+    for (let i = 0; i < tokens.length; i++) {
+        /*
+        test whether the current token belongs to the start of an entity
+        if so process the entire entity and skip ahead in this loop through tokens
+        to where the entity ends
+         */
+        let entity = entities.find(({start}) => start === i);
+        if (entity) {
+            /*
+            handle the entire entity
+             */
+            let j = i;
+            stringFragments.push(`<START:${entity.type}>`);
+            for (j; j <= entity.end; j++) {
+                stringFragments.push(tokens[j].content);
+            }
+            /*
+            skip forward
+             */
+            stringFragments.push('<END>');
+            i = j - 1;
+        } else {
+            stringFragments.push(tokens[i].content);
+        }
+    }
+    return stringFragments.join(' ');
 }
 
 /**
@@ -361,5 +442,6 @@ function guid() {
             .toString(16)
             .substring(1);
     }
+
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
