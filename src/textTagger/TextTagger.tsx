@@ -1,21 +1,16 @@
 import * as React from 'react';
 import {Menu} from 'semantic-ui-react';
+import {EntityConfigStore} from '../reducers/entityConfigReducer';
 
 interface Props {
     annotatedText: string
     onChange: (newText: string) => void
-    entityConfig: { [type: string]: EntityConfig }
+    entityConfig: EntityConfigStore
 }
 
 interface Token {
     idx: number
     content: string
-}
-
-interface EntityConfig {
-    displayName: string
-    color: string
-    textColor: string
 }
 
 interface Entity {
@@ -170,6 +165,9 @@ export class TextTagger extends React.Component<Props, State> {
     });
 
     resolveTokenStyle = (token: Token): any => {
+        const baseStyle = {
+            padding: `2px`
+        };
         const {entityConfig} = this.props;
         /*
         if the given token is currently being edited, its class is determined by the entity being edited
@@ -177,6 +175,7 @@ export class TextTagger extends React.Component<Props, State> {
         const {entityUnderEdit} = this.state;
         if (entityUnderEdit !== undefined && token.idx >= entityUnderEdit.start && token.idx <= entityUnderEdit.end) {
             return {
+                ...baseStyle,
                 backgroundColor: entityConfig[entityUnderEdit.type].color,
                 color: entityConfig[entityUnderEdit.type].textColor
             };
@@ -188,19 +187,20 @@ export class TextTagger extends React.Component<Props, State> {
                 reaching this code path implies the user has de-selected the token
                  */
                 if (entityUnderEdit !== undefined && resolvedEntity.id === entityUnderEdit.id) {
-                    return undefined;
+                    return baseStyle;
                 } else {
                     /*
                     this code path means this token belongs to an entity and that entity is not being edited,
                     so its class is naturally that of the entity
                      */
                     return {
+                        ...baseStyle,
                         backgroundColor: entityConfig[resolvedEntity.type].color,
                         color: entityConfig[resolvedEntity.type].textColor
                     };
                 }
             } else {
-                return undefined;
+                return baseStyle;
             }
         }
     };
@@ -239,11 +239,11 @@ export class TextTagger extends React.Component<Props, State> {
                 }
             );
         return (
-            <div style={{cursor: 'pointer', userSelect: 'none', fontSize: '1.5em', position: 'relative'}}>
+            <div style={{cursor: 'pointer', userSelect: 'none', fontSize: '1.5em'}}>
                 {spans}
                 {
                     menu !== undefined ?
-                        <div style={{position: 'absolute', top: menu.y + 10, left: menu.x}}>
+                        <div style={{position: 'fixed', zIndex: 1, top: menu.y + 10, left: menu.x}}>
                             <Menu vertical>
                                 {
                                     Object
