@@ -1,4 +1,3 @@
-
 type UpdateEntityConfig = 'UpdateEntityConfig'
 const UpdateEntityConfig: UpdateEntityConfig = 'UpdateEntityConfig';
 
@@ -18,9 +17,10 @@ export interface EntityConfigStore {
 }
 
 export function entityConfigReducer(state: EntityConfigStore = {}, action: UpdateEntityConfigAction): EntityConfigStore {
-    if (action.payload) {
-        return action.payload;
-    } else {
-        return state;
+    switch (action.type) {
+        case UpdateEntityConfig:
+            return action.payload;
+        default :
+            return state;
     }
 }
