@@ -5,7 +5,7 @@ import {TextTagger} from '../textTagger/TextTagger';
 import {StoreState} from '../index';
 import {EntityConfigStore} from '../reducers/entityConfigReducer';
 import {DocumentEditor} from './DocumentEditor';
-import {stripNERAnnotations} from '../ner/NerUtils';
+import {stripNERAnnotations} from '../ner/NERUtils';
 
 interface StateProps {
     entityConfig: EntityConfigStore

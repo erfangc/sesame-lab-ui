@@ -1,20 +1,20 @@
 import * as React from 'react';
 import {Menu} from 'semantic-ui-react';
 import {EntityConfigStore} from '../reducers/entityConfigReducer';
-import {Entity, stripNERAnnotations, textToToken, Token, tokenToText} from '../ner/NerUtils';
+import {Entity, textToToken, Token, tokenToText} from '../ner/NERUtils';
 import {guid} from '../utils/AppUtils';
 
 interface Props {
-    annotatedText: string
-    onChange: (newText: string) => void
-    entityConfig: EntityConfigStore
+    annotatedText: string;
+    onChange: (newText: string) => void;
+    entityConfig: EntityConfigStore;
 }
 
 interface State {
-    entityUnderEdit: Entity | undefined
-    menu: { x: number, y: number } | undefined
-    tokens: Token[]
-    entities: Entity[]
+    entityUnderEdit: Entity | undefined;
+    menu: { x: number, y: number } | undefined;
+    tokens: Token[];
+    entities: Entity[];
 }
 
 /**
@@ -30,7 +30,6 @@ export class TextTagger extends React.Component<Props, State> {
         /*
         populate colors
          */
-        console.log(stripNERAnnotations(props.annotatedText));
         return {
             entityUnderEdit: undefined,
             menu: undefined,
@@ -155,7 +154,7 @@ export class TextTagger extends React.Component<Props, State> {
         return {entityUnderEdit: {...entityUnderEdit, end: Math.max(entityUnderEdit.start, token.idx - 1)}};
     });
 
-    resolveTokenStyle = (token: Token): any => {
+    resolveTokenStyle = (token: Token) => {
         const baseStyle = {
             padding: `2px`
         };
@@ -268,4 +267,3 @@ export class TextTagger extends React.Component<Props, State> {
         );
     }
 }
-
