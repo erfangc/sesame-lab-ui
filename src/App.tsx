@@ -1,40 +1,38 @@
 import * as React from 'react';
-import {Container} from 'semantic-ui-react';
-import {SingleDocumentTrainer} from './corpus/SingleDocumentTrainer';
 import {connect} from 'react-redux';
-import {StoreState} from './index';
-import {Login} from './Login';
+import {DocumentTagger} from './corpus/DocumentTagger';
+import {history} from './History';
 import {Header} from './header/Header';
+import {Route, Router} from 'react-router';
+import {Container} from 'semantic-ui-react';
+import {StoreState} from './reducers';
 
 interface StateProps {
-    isAuthenticated: boolean
+    appReady: boolean
 }
 
-function mapStateToProps({auth: {isAuthenticated}}: StoreState): StateProps {
-    return {isAuthenticated};
+function mapStateToProps({appReady}: StoreState): StateProps {
+    return {appReady};
 }
 
-export const AppOrLogin = connect(mapStateToProps)(
-    class AppOrLogin extends React.Component<StateProps> {
+export const App = connect(mapStateToProps)(
+    class App extends React.Component<StateProps> {
         render(): React.ReactNode {
-            const {isAuthenticated} = this.props;
-            return !isAuthenticated ? <Login/> : <App/>;
+            const {appReady} = this.props;
+            if (!appReady) {
+                return null;
+            }
+            return (
+                <div>
+                    <Header/>
+                    <Router history={history}>
+                        <Container style={{marginTop: '7em'}}>
+                            <Route path={'/tag'} component={DocumentTagger}/>
+                        </Container>
+                    </Router>
+                </div>
+
+            );
         }
     }
 );
-
-class App extends React.Component {
-    render(): React.ReactNode {
-        return (
-            <div>
-                <Header/>
-                <Container style={{marginTop: '7em'}}>
-                    <SingleDocumentTrainer
-                        annotatedText={'<START:firm> BlackRock Inc. <END><START:family> S&P 500 Bank <END> Fund Inst Class'}
-                    />
-                </Container>
-            </div>
-
-        );
-    }
-}

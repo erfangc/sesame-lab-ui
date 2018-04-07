@@ -1,6 +1,6 @@
 import {Action} from 'redux-actions';
 import {Dispatch} from 'redux';
-import {auth0Handler} from './Auth0Handler';
+import {auth0Handler} from './auth0/Auth0Handler';
 
 type Logout = 'Logout';
 export const Logout: Logout = 'Logout';

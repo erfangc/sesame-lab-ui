@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {Menu} from 'semantic-ui-react';
-import {EntityConfigStore} from '../reducers/entityConfigReducer';
 import {Entity, textToToken, Token, tokenToText} from '../ner/NERUtils';
 import {guid} from '../utils/AppUtils';
+import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
 
 interface Props {
     annotatedText: string;
     onChange: (newText: string) => void;
-    entityConfig: EntityConfigStore;
+    corpusDescriptor: CorpusDescriptor;
 }
 
 interface State {
@@ -43,7 +43,8 @@ export class TextTagger extends React.Component<Props, State> {
         this.state = this.getInitialState(props);
     }
 
-    confirmEdit = (type: string) => this.setState(({entityUnderEdit, entities, menu}) => {
+    confirmEdit = (type: string) => this.setState(
+        ({entityUnderEdit, entities, menu}) => {
             /*
             either we have a new entity or we are updating an existing entity
              */
@@ -94,7 +95,8 @@ export class TextTagger extends React.Component<Props, State> {
         return entities.find(({start, end}) => idx >= start && idx <= end);
     };
 
-    deleteEntity = () => this.setState(({entityUnderEdit, entities, menu}) => {
+    deleteEntity = () => this.setState(
+        ({entityUnderEdit, entities, menu}) => {
             if (!entityUnderEdit) {
                 return {entityUnderEdit, entities, menu};
             } else {
@@ -158,7 +160,7 @@ export class TextTagger extends React.Component<Props, State> {
         const baseStyle = {
             padding: `2px`
         };
-        const {entityConfig} = this.props;
+        const {corpusDescriptor: {entityConfigs}} = this.props;
         /*
         if the given token is currently being edited, its class is determined by the entity being edited
          */
@@ -166,8 +168,8 @@ export class TextTagger extends React.Component<Props, State> {
         if (entityUnderEdit !== undefined && token.idx >= entityUnderEdit.start && token.idx <= entityUnderEdit.end) {
             return {
                 ...baseStyle,
-                backgroundColor: entityConfig[entityUnderEdit.type].color,
-                color: entityConfig[entityUnderEdit.type].textColor
+                backgroundColor: entityConfigs[entityUnderEdit.type].color,
+                color: entityConfigs[entityUnderEdit.type].textColor
             };
         } else {
             const resolvedEntity = this.resolveTokenEntity(token);
@@ -185,8 +187,8 @@ export class TextTagger extends React.Component<Props, State> {
                      */
                     return {
                         ...baseStyle,
-                        backgroundColor: entityConfig[resolvedEntity.type].color,
-                        color: entityConfig[resolvedEntity.type].textColor
+                        backgroundColor: entityConfigs[resolvedEntity.type].color,
+                        color: entityConfigs[resolvedEntity.type].textColor
                     };
                 }
             } else {
@@ -196,7 +198,7 @@ export class TextTagger extends React.Component<Props, State> {
     };
 
     render(): React.ReactNode {
-        const {entityConfig} = this.props;
+        const {corpusDescriptor: {entityConfigs}} = this.props;
         const {tokens, menu} = this.state;
         const spans = tokens
             .map((token) => {
@@ -237,14 +239,14 @@ export class TextTagger extends React.Component<Props, State> {
                             <Menu vertical>
                                 {
                                     Object
-                                        .keys(entityConfig)
+                                        .keys(entityConfigs)
                                         .filter(entity => entity !== 'unknown')
                                         .map(entity =>
                                             <Menu.Item
                                                 key={entity}
                                                 onClick={() => this.confirmEdit(entity)}
                                             >
-                                                {entityConfig[entity].displayName}
+                                                {entityConfigs[entity].displayName}
                                             </Menu.Item>
                                         )
                                 }

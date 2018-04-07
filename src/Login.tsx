@@ -1,15 +1,15 @@
 import * as React from 'react';
-import {Button, Container, Grid, Header, Message, Segment} from 'semantic-ui-react';
+import {Button, Grid, Header, Message, Segment} from 'semantic-ui-react';
 import {connect} from 'react-redux';
-import {StoreState} from './index';
 import {history} from './History';
-import {auth0Handler} from './reducers/auth/Auth0Handler';
+import {auth0Handler} from './reducers/auth/auth0/Auth0Handler';
+import {StoreState} from './reducers';
 
 interface StateProps {
     isAuthenticated: boolean
 }
 
-function mapStateToProps({auth:{isAuthenticated}}: StoreState): StateProps {
+function mapStateToProps({auth: {isAuthenticated}}: StoreState): StateProps {
     return {isAuthenticated};
 }
 
