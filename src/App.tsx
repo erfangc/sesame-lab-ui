@@ -3,9 +3,11 @@ import {connect} from 'react-redux';
 import {DocumentTagger} from './corpus/DocumentTagger';
 import {history} from './History';
 import {Header} from './header/Header';
-import {Route, Router} from 'react-router';
+import {Route, Router, Switch} from 'react-router';
 import {Container} from 'semantic-ui-react';
 import {StoreState} from './reducers';
+import {Home} from './Home';
+import {Browse} from './browse/Browse';
 
 interface StateProps {
     appReady: boolean
@@ -27,7 +29,11 @@ export const App = connect(mapStateToProps)(
                     <Header/>
                     <Router history={history}>
                         <Container style={{marginTop: '7em'}}>
-                            <Route path={'/tag'} component={DocumentTagger}/>
+                            <Switch>
+                                <Route path={'/tag'} component={DocumentTagger}/>
+                                <Route path={'/browse'} component={Browse}/>
+                                <Route path={'/'} component={Home}/>
+                            </Switch>
                         </Container>
                     </Router>
                 </div>

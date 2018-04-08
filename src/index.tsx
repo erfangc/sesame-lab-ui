@@ -10,7 +10,7 @@ import createSagaMiddleware from 'redux-saga';
 import thunkMiddleware from 'redux-thunk';
 import {rootReducer, StoreState} from './reducers';
 import {allSagas} from './reducers/sagas';
-import axios from 'axios';
+import {initInterceptors} from './initInterceptors';
 
 /**
  * I use both sagas and thunk here because for certain relatively simple async interactions sagas is too much overhead
@@ -23,25 +23,6 @@ const loggerMiddleware = createLogger();
 export const store: Store<StoreState> = createStore(rootReducer, applyMiddleware(loggerMiddleware, sagaMiddleware, thunkMiddleware));
 export const apiRoot = process.env.REACT_APP_BASE_URL;
 
-sagaMiddleware.run(allSagas);
-
-axios.interceptors.request.use(
-    (config) => {
-        const {auth: {accessToken}} = store.getState();
-        /*
-        add Authorization if accessToken is defined
-         */
-        if (accessToken !== null) {
-            return {...config, headers: {...config.headers, Authorization: `Bearer ${accessToken}`}};
-        } else {
-            return config;
-        }
-    },
-    (error) => {
-        console.error(error);
-    }
-);
-
 ReactDOM.render(
     (
         <Provider store={store}>
@@ -50,4 +31,10 @@ ReactDOM.render(
     ),
     document.getElementById('root') as HTMLElement
 );
+
+/*
+initiate background processes
+ */
+sagaMiddleware.run(allSagas);
 registerServiceWorker();
+initInterceptors();

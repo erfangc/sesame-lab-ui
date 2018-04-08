@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {Container, Menu} from 'semantic-ui-react';
+import {Container, Icon, Menu} from 'semantic-ui-react';
 import {history} from '../History';
 
 interface StateProps {
@@ -16,11 +16,13 @@ export const Header = connect(mapStateToProps)(
         render(): React.ReactNode {
             return (
                 <Menu fixed={'top'} inverted>
+                    <Menu.Item as={'a'} onClick={() => history.push('/')}>
+                        <Icon name={'signal'} color={'teal'}/>
+                        Sesame Lab
+                    </Menu.Item>
                     <Container>
-                        <Menu.Item as={'a'} onClick={() => history.push('/tag')}>Train</Menu.Item>
-                        <Menu.Item as={'a'}>Browse Traning Data Set</Menu.Item>
-                        <Menu.Item as={'a'}>Create a Model</Menu.Item>
-                        <Menu.Item as={'a'}>Test</Menu.Item>
+                        <Menu.Item as={'a'} onClick={() => history.push('/tag')}>Tag Sentence</Menu.Item>
+                        <Menu.Item as={'a'} onClick={() => history.push('/browse')}>Browse</Menu.Item>
                     </Container>
                 </Menu>
             );

@@ -6,8 +6,9 @@ export interface CorpusStore {
 }
 
 const initialState: CorpusStore = {
-    currentDocument: undefined
+    currentDocument: undefined,
 };
+
 type Actions = UnsetCurrentDocumentAction;
 
 export function corpusReducer(state: CorpusStore = initialState, action: Actions): CorpusStore {
