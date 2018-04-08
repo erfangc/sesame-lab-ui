@@ -2,11 +2,15 @@
  * Server side representation of a document
  */
 export interface Document {
-    Id?: string
-    Content: string
-    Corpus: string
-    CreatedBy: string
-    CreatedOn: number
-    LastModified: number
-    LastModifiedBy: string
+    id?: string
+    content: string
+    corpus: string
+    createdOn: number
+    createdBy: string
+    createdByEmail: string
+    createdByNickname: string
+    lastModifiedOn: number
+    lastModifiedBy: string
+    lastModifiedByEmail: string
+    lastModifiedByNickname: string
 }

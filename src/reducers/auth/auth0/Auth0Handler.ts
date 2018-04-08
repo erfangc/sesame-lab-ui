@@ -18,7 +18,7 @@ const auth0Instance = new auth0.WebAuth({
     redirectUri: AUTH_CONFIG.callbackUrl,
     audience: AUTH_CONFIG.audience,
     responseType: 'token id_token',
-    scope: 'openid profile'
+    scope: 'openid profile email'
 });
 
 /*

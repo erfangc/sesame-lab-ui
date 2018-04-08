@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {Button, Dropdown, DropdownItemProps, Form, Icon, Segment} from 'semantic-ui-react';
+import {Button, Icon, Segment} from 'semantic-ui-react';
 import {TextTagger} from '../textTagger/TextTagger';
 import {DocumentEditor} from './DocumentEditor';
 import {stripNERAnnotations} from '../ner/NERUtils';
@@ -9,6 +9,7 @@ import {Document} from './Document';
 import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
 import {StoreState} from '../reducers';
 import {Legend} from './Legend';
+import {CorpusChooser} from './CorpusChooser';
 
 interface StateProps {
     corpusDescriptors: CorpusDescriptor[]
@@ -46,26 +47,15 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
             if (corpusDescriptor == null) {
                 throw `could not find corpus with id = ${corpusID} in ${JSON.stringify(corpusDescriptors)}`;
             }
-            const options: DropdownItemProps[] = corpusDescriptors.map(({id, title}) => ({
-                key: id,
-                value: id,
-                text: title
-            }));
             return (
                 <React.Fragment>
                     <Segment>
-                        <Form>
-                            <Form.Field width={4}>
-                                <label>Corpus</label>
-                                <Dropdown
-                                    selection
-                                    disabled={editingSentence}
-                                    options={options}
-                                    value={corpusID}
-                                    onChange={(e, data) => this.changeCorpus(data.value as string)}
-                                />
-                            </Form.Field>
-                        </Form>
+                        <CorpusChooser
+                            onChange={(corpusDescriptor) => this.changeCorpus(corpusDescriptor.id)}
+                            disabled={editingSentence}
+                            corpusID={corpusID}
+                            standalone
+                        />
                         <br/>
                         {
                             editingSentence
@@ -122,10 +112,10 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
             const {currentDocument} = props;
             return {
                 loading: false,
-                id: currentDocument ? currentDocument.Id : undefined,
-                annotatedText: currentDocument ? currentDocument.Content : '',
+                id: currentDocument ? currentDocument.id : undefined,
+                annotatedText: currentDocument ? currentDocument.content : '',
                 editingSentence: currentDocument == null,
-                corpusID: currentDocument ? currentDocument.Corpus : props.corpusDescriptors[0].id
+                corpusID: currentDocument ? currentDocument.corpus : props.corpusDescriptors[0].id
             };
         }
 
@@ -135,9 +125,9 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
             this.setState(() => ({loading: true}));
             putDocument({
                 onComplete: id => this.setState(() => ({loading: false, id})),
-                Corpus: corpusID,
-                Content: annotatedText,
-                Id: id
+                corpus: corpusID,
+                content: annotatedText,
+                id: id
             });
         };
 

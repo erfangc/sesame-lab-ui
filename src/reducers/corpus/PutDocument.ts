@@ -7,9 +7,9 @@ type PutDocument = 'PutDocument';
 const PutDocument: PutDocument = 'PutDocument';
 
 interface Payload {
-    Id?: string
-    Content: string
-    Corpus: string
+    id?: string
+    content: string
+    corpus: string
     onComplete?: (id: string) => void
 }
 
@@ -20,16 +20,8 @@ interface PutDocumentAction {
 
 export const putDocument = createAction<Payload>(PutDocument);
 
-type UnsetCurrentDocument = 'UnsetCurrentDocument';
-export const UnsetCurrentDocument: UnsetCurrentDocument = 'UnsetCurrentDocument';
-const unsetCurrentDocument = createAction(UnsetCurrentDocument);
-
-export interface UnsetCurrentDocumentAction {
-    type: UnsetCurrentDocument
-}
-
-function* runPutDocument({payload: {Id, Corpus, Content, onComplete}}: PutDocumentAction) {
-    const {data}: AxiosResponse<string> = yield call(axios.post, `${apiRoot}/api/v1/corpus/${Corpus}/?${!!Id ? `id=${Id}` : ''}`, {body: Content});
+function* runPutDocument({payload: {id, corpus, content, onComplete}}: PutDocumentAction) {
+    const {data}: AxiosResponse<string> = yield call(axios.post, `${apiRoot}/api/v1/corpus/${corpus}/?${!!id ? `id=${id}` : ''}`, {body: content});
     if (onComplete !== undefined) {
         onComplete(data);
     }
