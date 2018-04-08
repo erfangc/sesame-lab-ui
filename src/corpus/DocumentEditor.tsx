@@ -22,17 +22,20 @@ export class DocumentEditor extends React.Component<Props, State> {
     }
 
     render(): React.ReactNode {
-        const {onCancel} = this.props;
         const {value, error} = this.state;
         return (
             <React.Fragment>
                 {
                     !error
                         ?
-                        <p>
-                            <span style={{color: 'orange'}}>WARNING: </span>
-                            Changing the content of the sentence erases existing tags
-                        </p>
+                        value === ''
+                            ?
+                            <p>&nbsp;</p>
+                            :
+                            <p>
+                                <span style={{color: 'orange'}}>WARNING: </span>
+                                Changing the content of the sentence erases existing tags
+                            </p>
                         :
                         <p>{error}</p>
                 }
@@ -49,13 +52,13 @@ export class DocumentEditor extends React.Component<Props, State> {
                         basic
                         color={'green'}
                         onClick={() => this.onSubmit(value)}
-                    >f
+                    >
                         Confirm
                     </Button>
                     <Button
                         basic
                         color={'red'}
-                        onClick={() => onCancel()}
+                        onClick={() => this.onCancel(value)}
                     >
                         Cancel
                     </Button>
@@ -70,6 +73,15 @@ export class DocumentEditor extends React.Component<Props, State> {
             this.setState(() => ({error: 'Your Input Cannot be Blank'}));
         } else {
             onSubmit(value);
+        }
+    };
+
+    private onCancel = (value: string) => {
+        const {onCancel} = this.props;
+        if (!value) {
+            this.setState(() => ({error: 'Your Input Cannot be Blank'}));
+        } else {
+            onCancel();
         }
     };
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {Button, Dropdown, DropdownItemProps, Form, Segment} from 'semantic-ui-react';
+import {Button, Dropdown, DropdownItemProps, Form, Icon, Segment} from 'semantic-ui-react';
 import {TextTagger} from '../textTagger/TextTagger';
 import {DocumentEditor} from './DocumentEditor';
 import {stripNERAnnotations} from '../ner/NERUtils';
@@ -12,14 +12,16 @@ import {Legend} from './Legend';
 
 interface StateProps {
     corpusDescriptors: CorpusDescriptor[]
-    document?: Document
+    currentDocument?: Document
 }
 
-function mapStateToProps({corpusDescriptors}: StoreState) {
-    return {corpusDescriptors};
+function mapStateToProps({corpusDescriptors, corpus: {currentDocument}}: StoreState): StateProps {
+    return {corpusDescriptors, currentDocument};
 }
 
 interface State {
+    id?: string
+    loading: boolean
     editingSentence: boolean
     annotatedText: string
     corpusID: string
@@ -39,7 +41,7 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
 
         render(): React.ReactNode {
             const {corpusDescriptors} = this.props;
-            const {annotatedText, editingSentence, corpusID} = this.state;
+            const {annotatedText, editingSentence, corpusID, loading} = this.state;
             const corpusDescriptor = corpusDescriptors.find(({id}) => id === corpusID);
             if (corpusDescriptor == null) {
                 throw `could not find corpus with id = ${corpusID} in ${JSON.stringify(corpusDescriptors)}`;
@@ -101,7 +103,12 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
                         <Legend corpusDescriptor={corpusDescriptor}/>
                     </Segment>
                     <Button.Group floated={'right'}>
-                        <Button primary onClick={this.submit}>Save</Button>
+                        <Button primary onClick={this.submit} loading={loading} disabled={loading || editingSentence}>
+                            <Icon name={'save'}/>Save
+                        </Button>
+                        <Button color={'green'} basic disabled={loading || editingSentence} onClick={this.reset}>
+                            <Icon name={'plus'}/>Create New
+                        </Button>
                     </Button.Group>
                 </React.Fragment>
             );
@@ -111,21 +118,29 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
             this.setState(({annotatedText}) => ({annotatedText: stripNERAnnotations(annotatedText), corpusID}));
         };
 
-        private getInitialState(props: StateProps & OwnProps & DispatchProps) {
-            const {document} = props;
+        private getInitialState(props: StateProps & OwnProps & DispatchProps): State {
+            const {currentDocument} = props;
             return {
-                annotatedText: document ? document.Content : '',
-                editingSentence: document == null,
-                corpusID: document ? document.Corpus : props.corpusDescriptors[0].id
+                loading: false,
+                id: currentDocument ? currentDocument.Id : undefined,
+                annotatedText: currentDocument ? currentDocument.Content : '',
+                editingSentence: currentDocument == null,
+                corpusID: currentDocument ? currentDocument.Corpus : props.corpusDescriptors[0].id
             };
         }
 
         private submit = () => {
-            const {corpusID, annotatedText} = this.state;
-            const {putDocument, document} = this.props;
-            putDocument({Corpus: corpusID, Content: annotatedText, Id: document != null ? document.Id : undefined});
-            this.setState(() => this.getInitialState(this.props));
+            const {corpusID, annotatedText, id} = this.state;
+            const {putDocument} = this.props;
+            this.setState(() => ({loading: true}));
+            putDocument({
+                onComplete: id => this.setState(() => ({loading: false, id})),
+                Corpus: corpusID,
+                Content: annotatedText,
+                Id: id
+            });
         };
 
+        private reset = () => this.setState(() => this.getInitialState(this.props));
     }
 );

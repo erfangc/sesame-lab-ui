@@ -1,6 +1,7 @@
 import {createAction} from 'redux-actions';
-import {call, put, takeLatest} from 'redux-saga/effects';
-import axios from 'axios';
+import {call, takeLatest} from 'redux-saga/effects';
+import axios, {AxiosResponse} from 'axios';
+import {apiRoot} from '../..';
 
 type PutDocument = 'PutDocument';
 const PutDocument: PutDocument = 'PutDocument';
@@ -9,6 +10,7 @@ interface Payload {
     Id?: string
     Content: string
     Corpus: string
+    onComplete?: (id: string) => void
 }
 
 interface PutDocumentAction {
@@ -26,12 +28,11 @@ export interface UnsetCurrentDocumentAction {
     type: UnsetCurrentDocument
 }
 
-function* runPutDocument({payload: {Corpus, Content}}: PutDocumentAction) {
-    yield call(axios.post, `http://127.0.0.1:8080/api/v1/corpus/${Corpus}/`, {body: Content});
-    /*
-    reset the current document
-     */
-    yield put(unsetCurrentDocument());
+function* runPutDocument({payload: {Id, Corpus, Content, onComplete}}: PutDocumentAction) {
+    const {data}: AxiosResponse<string> = yield call(axios.post, `${apiRoot}/api/v1/corpus/${Corpus}/?${!!Id ? `id=${Id}` : ''}`, {body: Content});
+    if (onComplete !== undefined) {
+        onComplete(data);
+    }
 }
 
 export function* watchPutDocument() {

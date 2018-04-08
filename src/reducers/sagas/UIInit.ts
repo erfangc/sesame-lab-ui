@@ -4,6 +4,7 @@ import {CorpusDescriptor} from '../corpusDescriptors/corpusDescriptorReducer';
 import {createAction} from 'redux-actions';
 import {receiveCorpusDescriptors} from '../corpusDescriptors/ReceiveCorpusDescriptors';
 import {appReady} from '../appReady';
+import {apiRoot} from '../..';
 
 type UIInit = 'UIInit';
 const UIInit: UIInit = 'UIInit';
@@ -18,7 +19,7 @@ interface UIConfiguration {
 }
 
 function* runUIInit() {
-    const {data: {corpusDescriptors}}: AxiosResponse<UIConfiguration> = yield call(axios.get, `http://127.0.0.1:8080/api/v1/ui-config`);
+    const {data: {corpusDescriptors}}: AxiosResponse<UIConfiguration> = yield call(axios.get, `${apiRoot}/api/v1/ui-config`);
     yield put(receiveCorpusDescriptors(corpusDescriptors));
     yield put(appReady());
 }

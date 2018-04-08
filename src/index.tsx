@@ -21,6 +21,7 @@ import axios from 'axios';
 const sagaMiddleware = createSagaMiddleware();
 const loggerMiddleware = createLogger();
 export const store: Store<StoreState> = createStore(rootReducer, applyMiddleware(loggerMiddleware, sagaMiddleware, thunkMiddleware));
+export const apiRoot = process.env.REACT_APP_BASE_URL;
 
 sagaMiddleware.run(allSagas);
 

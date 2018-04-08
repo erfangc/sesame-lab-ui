@@ -6,16 +6,17 @@ import {authenticateSuccess} from '../AuthenticateSuccess';
 import {uiInit} from '../../sagas/UIInit';
 
 export const AUTH_CONFIG = {
-    domain: 'sesame-lab.auth0.com',
-    clientId: 'tMAzRpskU72MYBo73Dx2YV3dr0jpQlj7',
-    callbackUrl: 'http://localhost:3000/callback'
+    domain: process.env.REACT_APP_DOMAIN as string,
+    clientId: process.env.REACT_APP_CLIENTID as string,
+    callbackUrl: process.env.REACT_APP_CALLBACKURL as string,
+    audience: process.env.REACT_APP_AUDIENCE as string
 };
 
 const auth0Instance = new auth0.WebAuth({
     domain: AUTH_CONFIG.domain,
     clientID: AUTH_CONFIG.clientId,
     redirectUri: AUTH_CONFIG.callbackUrl,
-    audience: `api.sesame-lab.com`,
+    audience: AUTH_CONFIG.audience,
     responseType: 'token id_token',
     scope: 'openid profile'
 });
