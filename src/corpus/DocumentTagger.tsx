@@ -13,11 +13,11 @@ import {CorpusChooser} from './CorpusChooser';
 
 interface StateProps {
     corpusDescriptors: CorpusDescriptor[]
-    currentDocument?: Document
+    activeDocument?: Document
 }
 
-function mapStateToProps({corpusDescriptors, corpus: {currentDocument}}: StoreState): StateProps {
-    return {corpusDescriptors, currentDocument};
+function mapStateToProps({corpusDescriptors, corpus: {activeDocument}}: StoreState): StateProps {
+    return {corpusDescriptors, activeDocument};
 }
 
 interface State {
@@ -104,18 +104,22 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
             );
         }
 
+        componentWillReceiveProps(nextProps: Readonly<StateProps & OwnProps & DispatchProps>, nextContext: any): void {
+            this.setState(state => ({...state, ...this.getInitialState(nextProps)}));
+        }
+
         private changeCorpus = (corpusID: string) => {
             this.setState(({annotatedText}) => ({annotatedText: stripNERAnnotations(annotatedText), corpusID}));
         };
 
         private getInitialState(props: StateProps & OwnProps & DispatchProps): State {
-            const {currentDocument} = props;
+            const {activeDocument} = props;
             return {
                 loading: false,
-                id: currentDocument ? currentDocument.id : undefined,
-                annotatedText: currentDocument ? currentDocument.content : '',
-                editingSentence: currentDocument == null,
-                corpusID: currentDocument ? currentDocument.corpus : props.corpusDescriptors[0].id
+                id: activeDocument ? activeDocument.id : undefined,
+                annotatedText: activeDocument ? activeDocument.content : '',
+                editingSentence: activeDocument == null,
+                corpusID: activeDocument ? activeDocument.corpus : props.corpusDescriptors[0].id
             };
         }
 

@@ -18,6 +18,10 @@ interface PutDocumentAction {
     payload: Payload
 }
 
+/**
+ * triggers the generator to upload an tagged document to the server
+ * @type {ActionFunction1<any, Action<any>>}
+ */
 export const putDocument = createAction<Payload>(PutDocument);
 
 function* runPutDocument({payload: {id, corpus, content, onComplete}}: PutDocumentAction) {

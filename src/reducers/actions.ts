@@ -4,6 +4,7 @@ import {receiveCorpusDescriptors} from './corpusDescriptors/ReceiveCorpusDescrip
 import {appNotReady, appReady} from './appReady';
 import {uiInit} from './sagas/UIInit';
 import {putDocument} from './corpus/PutDocument';
+import {setActiveDocument} from './corpus/SetActiveDocument';
 
 export const actions = {
     logout,
@@ -12,7 +13,8 @@ export const actions = {
     appReady,
     appNotReady,
     uiInit,
-    putDocument
+    putDocument,
+    setActiveDocument
 };
 
 export type DispatchProps = typeof actions;

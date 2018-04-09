@@ -3,13 +3,16 @@ import {connect} from 'react-redux';
 import {AgGridReact} from 'ag-grid-react';
 import 'ag-grid/dist/styles/ag-grid.css';
 import 'ag-grid/dist/styles/ag-theme-balham.css';
-import {ColDef, GridApi, ICellRendererParams} from 'ag-grid';
+import {ColDef, GridApi} from 'ag-grid';
 import {stripNERAnnotations} from '../ner/NERUtils';
 import {CorpusChooser} from '../corpus/CorpusChooser';
 import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
 import {apiRoot} from '../index';
 import axios from 'axios';
 import {StoreState} from '../reducers';
+import {actions, DispatchProps} from '../reducers/actions';
+import {Document} from '../corpus/Document';
+import {Edit} from './Edit';
 
 interface StateProps {
     corpusDescriptors: CorpusDescriptor[]
@@ -23,18 +26,12 @@ interface State {
     documents: Document[]
 }
 
-class Edit extends React.Component<ICellRendererParams> {
-    render(): React.ReactNode {
-        return <a style={{cursor: 'pointer'}}>Edit</a>;
-    }
-}
-
-export const Browse = connect(mapStateToProps)(
-    class Browse extends React.Component<StateProps, State> {
+export const Browse = connect(mapStateToProps, {...actions})(
+    class Browse extends React.Component<StateProps & DispatchProps, State> {
 
         gridApi: GridApi;
 
-        constructor(props: StateProps) {
+        constructor(props: StateProps & DispatchProps) {
             super(props);
             this.state = {
                 documents: []

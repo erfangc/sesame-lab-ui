@@ -1,15 +1,18 @@
 import {Document} from '../../corpus/Document';
+import {SetActiveDocument, SetActiveDocumentAction} from './SetActiveDocument';
 
 export interface CorpusStore {
-    currentDocument?: Document
+    activeDocument?: Document
 }
 
 const initialState: CorpusStore = {
-    currentDocument: undefined,
+    activeDocument: undefined
 };
-
-export function corpusReducer(state: CorpusStore = initialState, action: any): CorpusStore {
+type Actions = SetActiveDocumentAction;
+export function corpusReducer(state: CorpusStore = initialState, action: Actions): CorpusStore {
     switch (action.type) {
+        case SetActiveDocument:
+            return {...state, activeDocument: action.payload};
         default:
             return state;
     }
