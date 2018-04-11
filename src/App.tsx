@@ -8,6 +8,8 @@ import {Container} from 'semantic-ui-react';
 import {StoreState} from './reducers';
 import {Home} from './Home';
 import {Browse} from './browse/Browse';
+import {Train} from './models/Train';
+import {Models} from './models/Models';
 
 interface StateProps {
     appReady: boolean
@@ -32,6 +34,8 @@ export const App = connect(mapStateToProps)(
                             <Switch>
                                 <Route path={'/tag'} component={DocumentTagger}/>
                                 <Route path={'/browse'} component={Browse}/>
+                                <Route path={'/train'} component={Train}/>
+                                <Route path={'/models'} component={Models}/>
                                 <Route path={'/'} component={Home}/>
                             </Switch>
                         </Container>
