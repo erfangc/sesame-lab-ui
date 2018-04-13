@@ -42,11 +42,14 @@ export const Run = connect(mapStateToProps)(
             const {model} = this.props;
             const {loading, result, sentence} = this.state;
             if (!model) {
-                return <p>No Model Selected Click <a onClick={() => history.push('/models')}>Here</a> to Select a Model
-                </p>;
+                return (
+                    <p>
+                        No Model Selected Click <a onClick={() => history.push('/models')}>Here</a> to Select a Model
+                    </p>
+                );
             }
             const corpusDescriptor = this.props.corpusDescriptors.find(({id}) => id === model.corpus);
-            if (corpusDescriptor == undefined) {
+            if (corpusDescriptor == null) {
                 return null;
             }
             return (
