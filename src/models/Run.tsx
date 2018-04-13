@@ -49,7 +49,8 @@ export const Run = connect(mapStateToProps)(
                 );
             }
             const corpusDescriptor = this.props.corpusDescriptors.find(({id}) => id === model.corpus);
-            if (corpusDescriptor == null) {
+            if (corpusDescriptor == null
+            ) {
                 return null;
             }
             return (
