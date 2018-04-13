@@ -43,6 +43,10 @@ export class TextTagger extends React.Component<Props, State> {
         this.state = this.getInitialState(props);
     }
 
+    componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
+        this.setState(() => this.getInitialState(nextProps));
+    }
+
     confirmEdit = (type: string) => this.setState(
         ({entityUnderEdit, entities, menu}) => {
             /*

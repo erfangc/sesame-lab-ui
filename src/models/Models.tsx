@@ -4,6 +4,7 @@ import {Header, Button, Item} from 'semantic-ui-react';
 import {NERModel} from '../reducers/models/modelsReducer';
 import {StoreState} from '../reducers';
 import {actions, DispatchProps} from '../reducers/actions';
+import {history} from '../History';
 
 interface StateProps {
     models: NERModel[]
@@ -54,6 +55,7 @@ export const Models = connect(mapStateToProps, {...actions})(
                                             primary
                                             content={'Run this Model'}
                                             disabled={deleting}
+                                            onClick={() => this.runModel(model.modelID)}
                                         />
                                         <Button
                                             content={'Delete this Model'}
@@ -70,6 +72,12 @@ export const Models = connect(mapStateToProps, {...actions})(
                 </Item.Group>
             );
         }
+
+        private runModel = (modelID: string) => {
+            const {setActiveModel} = this.props;
+            setActiveModel(modelID);
+            history.push('/run');
+        };
 
         private deleteModel = (modelID: string) => {
             this.setState(() => ({deleting: true}));

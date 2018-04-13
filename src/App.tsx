@@ -10,6 +10,7 @@ import {Home} from './Home';
 import {Browse} from './browse/Browse';
 import {Train} from './models/Train';
 import {Models} from './models/Models';
+import {Run} from './models/Run';
 
 interface StateProps {
     appReady: boolean
@@ -36,6 +37,7 @@ export const App = connect(mapStateToProps)(
                                 <Route path={'/browse'} component={Browse}/>
                                 <Route path={'/train'} component={Train}/>
                                 <Route path={'/models'} component={Models}/>
+                                <Route path={'/run'} component={Run}/>
                                 <Route path={'/'} component={Home}/>
                             </Switch>
                         </Container>

@@ -8,12 +8,14 @@ import {setActiveDocument} from './corpus/SetActiveDocument';
 import {trainModel} from './trainModel';
 import {fetchModels} from './models/FetchModels';
 import {deleteModel} from './models/DeleteModel';
+import {setActiveModel} from './models/SetActiveModel';
 
 export const actions = {
     logout,
     trainModel,
     fetchModels,
     deleteModel,
+    setActiveModel,
     receiveCorpusDescriptors,
     authenticateSuccess,
     appReady,

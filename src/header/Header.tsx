@@ -26,6 +26,7 @@ export const Header = connect(mapStateToProps)(
                         <Menu.Item as={'a'} onClick={() => history.push('/browse')}>Browse</Menu.Item>
                         <Menu.Item as={'a'} onClick={() => history.push('/train')}>Train a Model</Menu.Item>
                         <Menu.Item as={'a'} onClick={() => history.push('/models')}>View Models</Menu.Item>
+                        <Menu.Item as={'a'} onClick={() => history.push('/run')}>Run Model</Menu.Item>
                         <Menu.Item as={'a'} onClick={() => auth0Handler.logout()}>Logout</Menu.Item>
                     </Container>
                 </Menu>
