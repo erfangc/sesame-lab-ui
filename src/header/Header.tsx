@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {Container, Icon, Menu} from 'semantic-ui-react';
+import {Dropdown, Container, Icon, Menu} from 'semantic-ui-react';
 import {history} from '../History';
 import {actions, DispatchProps} from '../reducers/actions';
 
@@ -22,14 +22,23 @@ export const Header = connect(mapStateToProps, {...actions})(
                         <Icon name={'signal'} color={'teal'}/>
                         Sesame Lab
                     </Menu.Item>
-                    <Container>
-                        <Menu.Item as={'a'} onClick={() => history.push('/tag')}>Tag Sentence</Menu.Item>
-                        <Menu.Item as={'a'} onClick={() => history.push('/browse')}>Browse</Menu.Item>
-                        <Menu.Item as={'a'} onClick={() => history.push('/train')}>Train a Model</Menu.Item>
-                        <Menu.Item as={'a'} onClick={() => history.push('/models')}>View Models</Menu.Item>
-                        <Menu.Item as={'a'} onClick={() => history.push('/run')}>Run Model</Menu.Item>
+                    <Dropdown item simple text={'Corpus'}>
+                        <Dropdown.Menu>
+                            <Dropdown.Item as={'a'} onClick={() => history.push('/tag')}>Tag Sentence</Dropdown.Item>
+                            <Dropdown.Item as={'a'} onClick={() => history.push('/browse')}>Browse</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown item simple text={'Model'}>
+                        <Dropdown.Menu>
+                            <Dropdown.Item as={'a'} onClick={() => history.push('/train')}>Train a Model</Dropdown.Item>
+                            <Dropdown.Item as={'a'} onClick={() => history.push('/models')}>View Models</Dropdown.Item>
+                            <Dropdown.Item as={'a'} onClick={() => history.push('/run')}>Run Model</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <Menu.Menu position={'right'}>
                         <Menu.Item as={'a'} onClick={() => logout()}>Logout</Menu.Item>
-                    </Container>
+                    </Menu.Menu>
+
                 </Menu>
             );
         }
