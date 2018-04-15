@@ -7,35 +7,28 @@ import {ColDef, GridApi} from 'ag-grid';
 import {stripNERAnnotations} from '../ner/NERUtils';
 import {CorpusChooser} from '../corpus/CorpusChooser';
 import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
-import {apiRoot} from '../index';
-import axios from 'axios';
 import {StoreState} from '../reducers';
 import {actions, DispatchProps} from '../reducers/actions';
 import {Document} from '../corpus/Document';
 import {Edit} from './Edit';
+import {Delete} from './Delete';
 
 interface StateProps {
     corpusDescriptors: CorpusDescriptor[]
-}
-
-function mapStateToProps({corpusDescriptors}: StoreState): StateProps {
-    return {corpusDescriptors};
-}
-
-interface State {
     documents: Document[]
 }
 
+function mapStateToProps({corpusDescriptors, corpus: {documents}}: StoreState): StateProps {
+    return {corpusDescriptors, documents};
+}
+
 export const Browse = connect(mapStateToProps, {...actions})(
-    class Browse extends React.Component<StateProps & DispatchProps, State> {
+    class Browse extends React.Component<StateProps & DispatchProps> {
 
         gridApi: GridApi;
 
         constructor(props: StateProps & DispatchProps) {
             super(props);
-            this.state = {
-                documents: []
-            };
         }
 
         componentDidMount(): void {
@@ -45,7 +38,7 @@ export const Browse = connect(mapStateToProps, {...actions})(
 
         render(): React.ReactNode {
 
-            const rowData: any = this.state.documents;
+            const rowData: any = this.props.documents;
 
             const containerStyle = {
                 height: 500
@@ -84,6 +77,10 @@ export const Browse = connect(mapStateToProps, {...actions})(
                 {
                     colId: 'edit',
                     cellRendererFramework: Edit
+                },
+                {
+                    colId: 'delete',
+                    cellRendererFramework: Delete
                 }
             ];
 
@@ -98,6 +95,8 @@ export const Browse = connect(mapStateToProps, {...actions})(
                             rowData={rowData}
                             columnDefs={columnDefs}
                             onGridReady={this.onGridReady}
+                            getRowNodeId={x => x.id}
+                            deltaRowDataMode
                         />
                     </div>
                 </div>
@@ -105,9 +104,8 @@ export const Browse = connect(mapStateToProps, {...actions})(
         }
 
         private changeCorpus = (corpusDescriptor: CorpusDescriptor) => {
-            axios
-                .get<Document[]>(`${apiRoot}/api/v1/corpus/${corpusDescriptor.id}/by-creator`)
-                .then(({data: documents}) => this.setState(() => ({documents})));
+            const {fetchDocuments} = this.props;
+            fetchDocuments({corpusID: corpusDescriptor.id});
         };
 
         private onGridReady = (event: any) => {

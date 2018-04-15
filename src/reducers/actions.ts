@@ -9,13 +9,19 @@ import {trainModel} from './trainModel';
 import {fetchModels} from './models/FetchModels';
 import {deleteModel} from './models/DeleteModel';
 import {setActiveModel} from './models/SetActiveModel';
+import {deleteDocument} from './corpus/DeleteDocument';
+import {receivedDocuments} from './corpus/ReceivedDocuments';
+import {fetchDocuments} from './corpus/FetchDocuments';
 
 export const actions = {
     logout,
     trainModel,
     fetchModels,
     deleteModel,
+    fetchDocuments,
     setActiveModel,
+    deleteDocument,
+    receivedDocuments,
     receiveCorpusDescriptors,
     authenticateSuccess,
     appReady,

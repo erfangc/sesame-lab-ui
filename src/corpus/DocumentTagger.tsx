@@ -96,7 +96,7 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
                         <Button primary onClick={this.submit} loading={loading} disabled={loading || editingSentence}>
                             <Icon name={'save'}/>Save
                         </Button>
-                        <Button color={'green'} basic disabled={loading || editingSentence} onClick={this.reset}>
+                        <Button color={'green'} basic disabled={loading || editingSentence} onClick={this.createNew}>
                             <Icon name={'plus'}/>Create New
                         </Button>
                     </Button.Group>
@@ -135,6 +135,9 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
             });
         };
 
-        private reset = () => this.setState(() => this.getInitialState(this.props));
+        private createNew = () => {
+            const {setActiveDocument} = this.props;
+            setActiveDocument(null);
+        };
     }
 );

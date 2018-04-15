@@ -1,7 +1,8 @@
 import {createAction} from 'redux-actions';
-import {call, takeLatest} from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 import axios, {AxiosResponse} from 'axios';
 import {apiRoot} from '../..';
+import {fetchDocuments} from './FetchDocuments';
 
 type PutDocument = 'PutDocument';
 const PutDocument: PutDocument = 'PutDocument';
@@ -29,6 +30,7 @@ function* runPutDocument({payload: {id, corpus, content, onComplete}}: PutDocume
     if (onComplete !== undefined) {
         onComplete(data);
     }
+    yield put(fetchDocuments({corpusID: corpus}));
 }
 
 export function* watchPutDocument() {

@@ -18,7 +18,7 @@ function mapStateToProps({corpusDescriptors}: StoreState): StateProps {
 interface State {
     modelName: string
     modelDescription?: string
-    modifiedAfter?: number
+    modifiedAfter?: string
     corpus: string
     loading: boolean
 }
@@ -59,8 +59,8 @@ export const Train = connect(mapStateToProps, {...actions})(
                                 <label>Only Include Data After</label>
                                 <input
                                     type={'date'}
-                                    value={new Date(modifiedAfter || 0).toISOString()}
-                                    onChange={({currentTarget: {value}}) => this.setState(() => ({modifiedAfter: new Date(value).valueOf()}))}
+                                    value={modifiedAfter || '2017-01-01'}
+                                    onChange={({currentTarget: {value}}) => this.setState(() => ({modifiedAfter: value}))}
                                 />
                             </Form.Field>
                         </Form.Group>
@@ -88,7 +88,7 @@ export const Train = connect(mapStateToProps, {...actions})(
             const {trainModel} = this.props;
             const {modifiedAfter, modelDescription, modelName, corpus} = this.state;
             trainModel({
-                modifiedAfter,
+                modifiedAfter: new Date(modifiedAfter || '2017-01-01').valueOf(),
                 modelDescription,
                 modelName,
                 corpus,

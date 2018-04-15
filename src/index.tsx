@@ -20,7 +20,7 @@ import {initInterceptors} from './initInterceptors';
  */
 const sagaMiddleware = createSagaMiddleware();
 const loggerMiddleware = createLogger();
-export const store: Store<StoreState> = createStore(rootReducer, applyMiddleware(loggerMiddleware, sagaMiddleware, thunkMiddleware));
+export const store: Store<StoreState> = createStore(rootReducer, applyMiddleware(thunkMiddleware, loggerMiddleware, sagaMiddleware));
 export const apiRoot = process.env.REACT_APP_BASE_URL;
 
 ReactDOM.render(

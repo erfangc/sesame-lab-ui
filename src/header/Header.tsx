@@ -2,7 +2,7 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {Container, Icon, Menu} from 'semantic-ui-react';
 import {history} from '../History';
-import {auth0Handler} from '../reducers/auth/auth0/Auth0Handler';
+import {actions, DispatchProps} from '../reducers/actions';
 
 interface StateProps {
 
@@ -12,9 +12,10 @@ function mapStateToProps(): StateProps {
     return {};
 }
 
-export const Header = connect(mapStateToProps)(
-    class Header extends React.Component<StateProps> {
+export const Header = connect(mapStateToProps, {...actions})(
+    class Header extends React.Component<StateProps & DispatchProps> {
         render(): React.ReactNode {
+            const {logout} = this.props;
             return (
                 <Menu fixed={'top'} inverted>
                     <Menu.Item as={'a'} onClick={() => history.push('/')}>
@@ -27,7 +28,7 @@ export const Header = connect(mapStateToProps)(
                         <Menu.Item as={'a'} onClick={() => history.push('/train')}>Train a Model</Menu.Item>
                         <Menu.Item as={'a'} onClick={() => history.push('/models')}>View Models</Menu.Item>
                         <Menu.Item as={'a'} onClick={() => history.push('/run')}>Run Model</Menu.Item>
-                        <Menu.Item as={'a'} onClick={() => auth0Handler.logout()}>Logout</Menu.Item>
+                        <Menu.Item as={'a'} onClick={() => logout()}>Logout</Menu.Item>
                     </Container>
                 </Menu>
             );
