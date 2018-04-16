@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {Grid, Header, Icon, Item} from 'semantic-ui-react';
+import {Grid, Header, Icon, Table} from 'semantic-ui-react';
 import axios from 'axios';
 import {apiRoot} from './index';
 import {CorpusDescriptor} from './reducers/corpusDescriptors/corpusDescriptorReducer';
@@ -26,6 +26,8 @@ interface State {
 
 export const Home = connect(mapStateToProps)(
     class Home extends React.Component<StateProps, State> {
+
+        private topCorpusDiv: HTMLDivElement | null;
 
         constructor(props: StateProps, context: any) {
             super(props, context);
@@ -58,41 +60,57 @@ export const Home = connect(mapStateToProps)(
                     <Grid.Column>
                         <Header icon>
                             <Icon name={'users'} circular/>
-                            <Header.Content>Top Users</Header.Content>
+                            <Header.Content>Top Trainers</Header.Content>
                         </Header>
-                        <Item.Group>
-                            {
-                                Object
-                                    .keys(topUsers)
-                                    .map((topUser, idx) => (
-                                            <Item key={topUser}>
-                                                <Item.Content verticalAlign={'middle'}>
-                                                    {idx === 0 ? <Icon name={'favorite'} color={'yellow'}/> : <Icon/>}
-                                                    <Item.Header>{topUser} ({topUsers[topUser]})</Item.Header>
-                                                </Item.Content>
-                                            </Item>
+                        <Table basic={'very'}>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell/>
+                                    <Table.HeaderCell/>
+                                    <Table.HeaderCell># Documents Trained</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                                {
+                                    Object
+                                        .keys(topUsers)
+                                        .map((topUser, idx) => (
+                                                <Table.Row key={topUser}>
+                                                    <Table.Cell>
+                                                        {idx === 0 ? <Icon name={'favorite'} color={'yellow'}/> : <Icon/>}
+                                                    </Table.Cell>
+                                                    <Table.Cell>{topUser}</Table.Cell>
+                                                    <Table.Cell>{topUsers[topUser]}</Table.Cell>
+                                                </Table.Row>
+                                            )
                                         )
-                                    )
-                            }
-                        </Item.Group>
+                                }
+
+                            </Table.Body>
+                        </Table>
                     </Grid.Column>
                     <Grid.Column>
-                        <Header icon>
-                            <Icon name={'line chart'} circular/>
-                            <Header.Content>Top Corpus</Header.Content>
-                        </Header>
-                        <PieChart width={400} height={400}>
-                            <Pie
-                                data={pieData}
-                                cx={200}
-                                cy={200}
-                                label
-                                outerRadius={80}
-                                fill="#8884d8"
-                                dataKey={'value'}
-                            />
-                            <Tooltip/>
-                        </PieChart>
+                        <div ref={ref => this.topCorpusDiv = ref}>
+                            <Header icon>
+                                <Icon name={'line chart'} circular/>
+                                <Header.Content>Top Corpus</Header.Content>
+                            </Header>
+                            <PieChart
+                                width={this.topCorpusDiv != null ? this.topCorpusDiv.getBoundingClientRect().width : 535.5}
+                                height={400}
+                            >
+                                <Pie
+                                    data={pieData}
+                                    cx={535.5 / 2}
+                                    cy={200}
+                                    label
+                                    fill="#4F52D2"
+                                    dataKey={'value'}
+                                />
+                                <Tooltip/>
+                            </PieChart>
+
+                        </div>
                     </Grid.Column>
                 </Grid>
             );

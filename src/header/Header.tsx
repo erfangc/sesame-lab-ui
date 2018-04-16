@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {Dropdown, Container, Icon, Menu} from 'semantic-ui-react';
+import {Dropdown, Menu} from 'semantic-ui-react';
 import {history} from '../History';
 import {actions, DispatchProps} from '../reducers/actions';
 
@@ -19,8 +19,7 @@ export const Header = connect(mapStateToProps, {...actions})(
             return (
                 <Menu fixed={'top'} inverted>
                     <Menu.Item as={'a'} onClick={() => history.push('/')}>
-                        <Icon name={'signal'} color={'teal'}/>
-                        Sesame Lab
+                        <img className="auth0-lock-header-logo" src="http://logodust.com/img/logo.svg"/>
                     </Menu.Item>
                     <Dropdown item simple text={'Corpus'}>
                         <Dropdown.Menu>
