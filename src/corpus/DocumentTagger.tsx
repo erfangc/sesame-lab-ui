@@ -5,7 +5,7 @@ import {TextTagger} from '../textTagger/TextTagger';
 import {DocumentEditor} from './DocumentEditor';
 import {stripNERAnnotations} from '../ner/NERUtils';
 import {actions, DispatchProps} from '../reducers/actions';
-import {Document} from './Document';
+import {Document, TaggedEntity} from './Document';
 import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
 import {StoreState} from '../reducers';
 import {Legend} from './Legend';
@@ -62,7 +62,7 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
                                 ?
                                 <DocumentEditor
                                     onCancel={() => this.setState(() => ({editingSentence: false}))}
-                                    onSubmit={this.updateContent}
+                                    onSubmit={(content) => this.updateContent(content, [])}
                                     value={stripNERAnnotations(content)}
                                 />
                                 :
@@ -70,7 +70,7 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
                                     <p>Highlight part of the sentence and identify what they are</p>
                                     <TextTagger
                                         annotatedText={content}
-                                        onChange={content => this.updateContent(content)}
+                                        onChange={(content, entities) => this.updateContent(content, entities)}
                                         corpusDescriptor={corpusDescriptor}
                                     />
                                     <br/>
@@ -103,11 +103,12 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
             this.setState(state => ({...state, ...this.getInitialState(nextProps)}));
         }
 
-        private updateContent = (content: string) => this.setState(({document}) => ({
+        private updateContent = (content: string, entities: TaggedEntity[]) => this.setState(({document}) => ({
             editingSentence: false,
             document: {
                 ...document,
-                content
+                content,
+                entities
             }
         }));
 

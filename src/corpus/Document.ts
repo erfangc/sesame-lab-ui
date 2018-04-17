@@ -16,7 +16,7 @@ export interface Document {
     entities?: TaggedEntity[]
 }
 
-interface TaggedEntity {
+export interface TaggedEntity {
     type: string
     value: string
 }

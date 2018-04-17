@@ -3,10 +3,11 @@ import {Menu} from 'semantic-ui-react';
 import {Entity, textToToken, Token, tokenToText} from '../ner/NERUtils';
 import {guid} from '../utils/AppUtils';
 import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
+import {TaggedEntity} from '../corpus/Document';
 
 interface Props {
     annotatedText: string;
-    onChange: (newText: string) => void;
+    onChange: (newText: string, entities: TaggedEntity[]) => void;
     corpusDescriptor: CorpusDescriptor;
 }
 
@@ -81,7 +82,22 @@ export class TextTagger extends React.Component<Props, State> {
                 };
             }
         },
-        () => this.props.onChange(tokenToText({entities: this.state.entities, tokens: this.state.tokens})));
+        () => {
+            const {tokens, entities} = this.state;
+            const {onChange} = this.props;
+            // transform entities to TaggedEntities
+            const taggedEntities = this.getTaggedEntities(entities, tokens);
+            onChange(tokenToText({entities, tokens}), taggedEntities);
+        });
+
+    getTaggedEntities(entities: Entity[], tokens: Token[]) {
+        return entities.map(entity => {
+            return {
+                type: entity.type,
+                value: tokens.slice(entity.start, entity.end + 1).map(token => token.content).join(' ')
+            };
+        });
+    }
 
     cancelEdit = () => this.setState(({entityUnderEdit}) => {
         if (!entityUnderEdit) {
@@ -116,7 +132,12 @@ export class TextTagger extends React.Component<Props, State> {
                 }
             }
         },
-        () => this.props.onChange(tokenToText({tokens: this.state.tokens, entities: this.state.entities}))
+        () => {
+            const {onChange} = this.props;
+            const {entities, tokens} = this.state;
+            const taggedEntities = this.getTaggedEntities(entities, tokens);
+            onChange(tokenToText({tokens, entities}), taggedEntities);
+        }
     );
 
     startEntityEdit = (token: Token) => {
