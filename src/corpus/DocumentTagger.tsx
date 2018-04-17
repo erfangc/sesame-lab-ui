@@ -10,22 +10,22 @@ import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorRe
 import {StoreState} from '../reducers';
 import {Legend} from './Legend';
 import {CorpusChooser} from './CorpusChooser';
+import {UserProfile} from '../reducers/auth/authReducer';
 
 interface StateProps {
     corpusDescriptors: CorpusDescriptor[]
     activeDocument?: Document
+    userProfile?: UserProfile
 }
 
-function mapStateToProps({corpusDescriptors, corpus: {activeDocument}}: StoreState): StateProps {
-    return {corpusDescriptors, activeDocument};
+function mapStateToProps({auth: {userProfile}, corpusDescriptors, corpus: {activeDocument}}: StoreState): StateProps {
+    return {corpusDescriptors, activeDocument, userProfile};
 }
 
 interface State {
-    id?: string
     loading: boolean
     editingSentence: boolean
-    annotatedText: string
-    corpusID: string
+    document: Document
 }
 
 interface OwnProps {
@@ -42,7 +42,7 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
 
         render(): React.ReactNode {
             const {corpusDescriptors} = this.props;
-            const {annotatedText, editingSentence, corpusID, loading} = this.state;
+            const {editingSentence, loading, document: {corpus: corpusID, content}} = this.state;
             const corpusDescriptor = corpusDescriptors.find(({id}) => id === corpusID);
             if (corpusDescriptor == null) {
                 throw `could not find corpus with id = ${corpusID} in ${JSON.stringify(corpusDescriptors)}`;
@@ -62,20 +62,15 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
                                 ?
                                 <DocumentEditor
                                     onCancel={() => this.setState(() => ({editingSentence: false}))}
-                                    onSubmit={
-                                        annotatedText => this.setState(() => ({
-                                            editingSentence: false,
-                                            annotatedText
-                                        }))
-                                    }
-                                    value={stripNERAnnotations(annotatedText)}
+                                    onSubmit={this.updateContent}
+                                    value={stripNERAnnotations(content)}
                                 />
                                 :
                                 <React.Fragment>
                                     <p>Highlight part of the sentence and identify what they are</p>
                                     <TextTagger
-                                        annotatedText={annotatedText}
-                                        onChange={annotatedText => this.setState(() => ({annotatedText}))}
+                                        annotatedText={content}
+                                        onChange={content => this.updateContent(content)}
                                         corpusDescriptor={corpusDescriptor}
                                     />
                                     <br/>
@@ -108,30 +103,73 @@ export const DocumentTagger = connect(mapStateToProps, {...actions})(
             this.setState(state => ({...state, ...this.getInitialState(nextProps)}));
         }
 
-        private changeCorpus = (corpusID: string) => {
-            this.setState(({annotatedText}) => ({annotatedText: stripNERAnnotations(annotatedText), corpusID}));
+        private updateContent = (content: string) => this.setState(({document}) => ({
+            editingSentence: false,
+            document: {
+                ...document,
+                content
+            }
+        }));
+
+        private changeCorpus = (corpus: string) => {
+            // if we are changing corpus, then all existing tagged entities are removed
+            this.setState(({document}) => ({
+                document: {
+                    ...document,
+                    corpus,
+                    content: stripNERAnnotations(document.content)
+                }
+            }));
         };
 
         private getInitialState(props: StateProps & OwnProps & DispatchProps): State {
-            const {activeDocument} = props;
-            return {
-                loading: false,
-                id: activeDocument ? activeDocument.id : undefined,
-                annotatedText: activeDocument ? activeDocument.content : '',
-                editingSentence: activeDocument == null,
-                corpusID: activeDocument ? activeDocument.corpus : props.corpusDescriptors[0].id
-            };
+            const {activeDocument, userProfile, corpusDescriptors} = props;
+            if (userProfile === undefined) {
+                throw 'user profile is not defined';
+            }
+            /*
+            if active document is not set, then we are dealing with a brand new document
+             */
+            if (activeDocument == null) {
+                const {email, id, nickname} = userProfile;
+                return {
+                    loading: false,
+                    editingSentence: true,
+                    document: {
+                        content: '',
+                        corpus: corpusDescriptors[0].id,
+                        entities: [],
+                        lastModifiedOn: new Date().valueOf(),
+                        lastModifiedBy: id,
+                        lastModifiedByNickname: nickname,
+                        lastModifiedByEmail: email,
+                        createdOn: new Date().valueOf(),
+                        createdBy: id,
+                        createdByNickname: nickname,
+                        createdByEmail: email
+                    }
+                };
+            } else {
+                /*
+                otherwise we are editing an existing document
+                 */
+                return {
+                    loading: false,
+                    editingSentence: false,
+                    document: {
+                        ...activeDocument
+                    }
+                };
+            }
         }
 
         private submit = () => {
-            const {corpusID, annotatedText, id} = this.state;
+            const {document} = this.state;
             const {putDocument} = this.props;
             this.setState(() => ({loading: true}));
             putDocument({
-                onComplete: id => this.setState(() => ({loading: false, id})),
-                corpus: corpusID,
-                content: annotatedText,
-                id: id
+                onComplete: () => this.setState(() => ({loading: false})),
+                document
             });
         };
 

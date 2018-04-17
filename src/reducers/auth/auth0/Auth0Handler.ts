@@ -4,6 +4,7 @@ import {history} from '../../../History';
 import {store} from '../../../index';
 import {authenticateSuccess} from '../AuthenticateSuccess';
 import {uiInit} from '../../sagas/UIInit';
+import {updateUserProfile} from '../UpdateUserProfile';
 
 export const AUTH_CONFIG = {
     domain: process.env.REACT_APP_DOMAIN as string,
@@ -39,7 +40,7 @@ function initAuth() {
                     expiresAt: authResult.expiresIn,
                     idToken: authResult.idToken
                 }));
-                store.dispatch(uiInit());
+                runPostAuthSequence(authResult.accessToken);
                 history.push('/');
             }
         });
@@ -56,12 +57,27 @@ function initAuth() {
                     idToken: idToken
                 }));
             }
-            store.dispatch(uiInit());
+            runPostAuthSequence(accessToken);
         });
+    } else {
+        // TODO in this case we should send the user directly to the authorization provider's login page instead of our own
     }
 }
 
 initAuth();
+
+function runPostAuthSequence(accessToken: string | null) {
+    if (accessToken != null) {
+        auth0Instance.client.userInfo(accessToken, (_, userInfo) => {
+            if (userInfo.email !== undefined && userInfo.nickname !== undefined) {
+                store.dispatch(updateUserProfile({email: userInfo.email, id: userInfo.sub, nickname: userInfo.nickname}));
+                store.dispatch(uiInit());
+            }
+        });
+    } else {
+        throw 'accessToken cannot be null';
+    }
+}
 
 /**
  * this authentication method should only be used on app start up / refresh

@@ -3,14 +3,13 @@ import {call, put, takeLatest} from 'redux-saga/effects';
 import axios, {AxiosResponse} from 'axios';
 import {apiRoot} from '../..';
 import {fetchDocuments} from './FetchDocuments';
+import {Document} from '../../corpus/Document';
 
 type PutDocument = 'PutDocument';
 const PutDocument: PutDocument = 'PutDocument';
 
 interface Payload {
-    id?: string
-    content: string
-    corpus: string
+    document: Document
     onComplete?: (id: string) => void
 }
 
@@ -25,12 +24,12 @@ interface PutDocumentAction {
  */
 export const putDocument = createAction<Payload>(PutDocument);
 
-function* runPutDocument({payload: {id, corpus, content, onComplete}}: PutDocumentAction) {
-    const {data}: AxiosResponse<string> = yield call(axios.post, `${apiRoot}/api/v1/corpus/${corpus}/?${!!id ? `id=${id}` : ''}`, {body: content});
+function* runPutDocument({payload: {document, onComplete}}: PutDocumentAction) {
+    const {data}: AxiosResponse<string> = yield call(axios.post, `${apiRoot}/api/v1/corpus/${document.corpus}/`, document);
     if (onComplete !== undefined) {
         onComplete(data);
     }
-    yield put(fetchDocuments({corpusID: corpus}));
+    yield put(fetchDocuments({corpusID: document.corpus}));
 }
 
 export function* watchPutDocument() {

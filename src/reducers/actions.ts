@@ -12,6 +12,7 @@ import {setActiveModel} from './models/SetActiveModel';
 import {deleteDocument} from './corpus/DeleteDocument';
 import {receivedDocuments} from './corpus/ReceivedDocuments';
 import {fetchDocuments} from './corpus/FetchDocuments';
+import {updateUserProfile} from './auth/UpdateUserProfile';
 
 export const actions = {
     logout,
@@ -28,6 +29,7 @@ export const actions = {
     appNotReady,
     uiInit,
     putDocument,
+    updateUserProfile,
     setActiveDocument
 };
 

@@ -13,4 +13,10 @@ export interface Document {
     lastModifiedBy: string
     lastModifiedByEmail: string
     lastModifiedByNickname: string
+    entities?: TaggedEntity[]
+}
+
+interface TaggedEntity {
+    type: string
+    value: string
 }
