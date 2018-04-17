@@ -16,10 +16,10 @@ function mapStateToProps({corpusDescriptors}: StoreState): StateProps {
 }
 
 interface State {
-    modelName: string
-    modelDescription?: string
+    name: string
+    description?: string
     modifiedAfter?: string
-    corpus: string
+    corpusID: string
     loading: boolean
 }
 
@@ -31,28 +31,28 @@ export const Train = connect(mapStateToProps, {...actions})(
             const {corpusDescriptors} = props;
             this.state = {
                 loading: false,
-                modelName: '',
-                modelDescription: undefined,
-                corpus: corpusDescriptors[0].id,
+                name: '',
+                description: undefined,
+                corpusID: corpusDescriptors[0].id,
                 modifiedAfter: undefined
             };
         }
 
         render(): React.ReactNode {
-            const {corpus, loading, modelDescription, modelName, modifiedAfter} = this.state;
+            const {corpusID, loading, description, name, modifiedAfter} = this.state;
             return (
                 <div>
                     <Form>
                         <CorpusChooser
-                            corpusID={corpus}
-                            onChange={({id}) => this.setState(() => ({corpus: id}))}
+                            corpusID={corpusID}
+                            onChange={({id}) => this.setState(() => ({corpusID: id}))}
                         />
                         <Form.Group>
                             <Form.Field width={6}>
                                 <label>Model Name</label>
                                 <input
-                                    value={modelName}
-                                    onChange={({currentTarget: {value}}) => this.setState(() => ({modelName: value}))}
+                                    value={name}
+                                    onChange={({currentTarget: {value}}) => this.setState(() => ({name: value}))}
                                 />
                             </Form.Field>
                             <Form.Field width={10}>
@@ -67,8 +67,8 @@ export const Train = connect(mapStateToProps, {...actions})(
                         <Form.Field>
                             <label>Model Description</label>
                             <textarea
-                                value={modelDescription}
-                                onChange={({currentTarget: {value}}) => this.setState(() => ({modelDescription: value}))}
+                                value={description}
+                                onChange={({currentTarget: {value}}) => this.setState(() => ({description: value}))}
                             />
                         </Form.Field>
                         <Button
@@ -86,12 +86,12 @@ export const Train = connect(mapStateToProps, {...actions})(
         private submit = () => {
             this.setState(() => ({loading: true}));
             const {trainModel} = this.props;
-            const {modifiedAfter, modelDescription, modelName, corpus} = this.state;
+            const {modifiedAfter, description, name, corpusID} = this.state;
             trainModel({
                 modifiedAfter: new Date(modifiedAfter || '2017-01-01').valueOf(),
-                modelDescription,
-                modelName,
-                corpus,
+                description,
+                name,
+                corpusID,
                 onComplete: () => {
                     this.setState(() => ({loading: false}));
                     setTimeout(() => history.push('/models'), 250);

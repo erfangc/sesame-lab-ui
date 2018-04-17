@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {Header, Button, Item} from 'semantic-ui-react';
-import {NERModel} from '../reducers/models/modelsReducer';
+import {Button, Header, Item} from 'semantic-ui-react';
+import {NERModelWithCreatorInfo} from '../reducers/models/modelsReducer';
 import {StoreState} from '../reducers';
 import {actions, DispatchProps} from '../reducers/actions';
 import {history} from '../History';
 
 interface StateProps {
-    models: NERModel[]
+    models: NERModelWithCreatorInfo[]
 }
 
 function mapStateToProps({models: {models}}: StoreState): StateProps {
@@ -36,38 +36,39 @@ export const Models = connect(mapStateToProps, {...actions})(
             const {models} = this.props;
             const {deleting} = this.state;
             if (models.length === 0) {
-                return (<Header textAlign={'center'}>No Models were Trained</Header>)
+                return (<Header textAlign={'center'}>No Models were Trained</Header>);
             }
             return (
                 <Item.Group divided relaxed>
                     {
-                        models.map((model) => (
-                            <Item key={model.modelID}>
-                                <Item.Content>
-                                    <Item.Header>{model.modelName}</Item.Header>
-                                    <Item.Meta>
-                                        <span>{model.createdByEmail}</span>
-                                        <span>{model.createdOn}</span>
-                                    </Item.Meta>
-                                    <Item.Description>{model.modelDescription}</Item.Description>
-                                    <Item.Extra>
-                                        <Button
-                                            primary
-                                            content={'Run this Model'}
-                                            disabled={deleting}
-                                            onClick={() => this.runModel(model.modelID)}
-                                        />
-                                        <Button
-                                            content={'Delete this Model'}
-                                            color={'red'}
-                                            disabled={deleting}
-                                            loading={deleting}
-                                            onClick={() => this.deleteModel(model.modelID)}
-                                        />
-                                    </Item.Extra>
-                                </Item.Content>
-                            </Item>
-                        ))
+                        models.map(({model: {id, createdOn, description, name}, user}) => (
+                                <Item key={id}>
+                                    <Item.Content>
+                                        <Item.Header>{name}</Item.Header>
+                                        <Item.Meta>
+                                            <span>{new Date(createdOn).toLocaleString()}</span>
+                                            <span>{user ? user.email : 'unknown author'}</span>
+                                        </Item.Meta>
+                                        <Item.Description>{description}</Item.Description>
+                                        <Item.Extra>
+                                            <Button
+                                                primary
+                                                content={'Run this Model'}
+                                                disabled={deleting}
+                                                onClick={() => this.runModel(id)}
+                                            />
+                                            <Button
+                                                content={'Delete this Model'}
+                                                color={'red'}
+                                                disabled={deleting}
+                                                loading={deleting}
+                                                onClick={() => this.deleteModel(id)}
+                                            />
+                                        </Item.Extra>
+                                    </Item.Content>
+                                </Item>
+                            )
+                        )
                     }
                 </Item.Group>
             );

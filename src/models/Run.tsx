@@ -16,8 +16,8 @@ interface StateProps {
 }
 
 function mapStateToProps({models: {activeModel, models}, corpusDescriptors}: StoreState): StateProps {
-    const model = models.find(({modelID}) => modelID === activeModel);
-    return {model, corpusDescriptors};
+    const model = models.find(({model: {id}}) => id === activeModel);
+    return {model: model === undefined ? undefined : model.model, corpusDescriptors};
 }
 
 interface State {
@@ -48,7 +48,7 @@ export const Run = connect(mapStateToProps)(
                     </p>
                 );
             }
-            const corpusDescriptor = this.props.corpusDescriptors.find(({id}) => id === model.corpus);
+            const corpusDescriptor = this.props.corpusDescriptors.find(({id}) => id === model.corpusID);
             if (corpusDescriptor == null
             ) {
                 return null;
@@ -84,9 +84,9 @@ export const Run = connect(mapStateToProps)(
             const {model} = this.props;
             const {sentence} = this.state;
             if (model !== undefined) {
-                const {modelID} = model;
+                const {id} = model;
                 axios
-                    .get<string>(`${apiRoot}/api/v1/ner/${modelID}/run`, {params: {sentence}})
+                    .get<string>(`${apiRoot}/api/v1/ner/${id}/run`, {params: {sentence}})
                     .then((resp) => this.setState(() => ({result: resp.data})));
             }
         };

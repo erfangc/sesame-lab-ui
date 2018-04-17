@@ -1,20 +1,28 @@
 import {ReceivedModels, ReceivedModelsAction} from './FetchModels';
 import {SetActiveModel, SetActiveModelAction} from './SetActiveModel';
 
+export interface NERModelWithCreatorInfo {
+    model: NERModel
+    user?: {
+        email: string
+        nickname: string
+        id: string
+    }
+}
+
 export interface NERModel {
-    modelID: string
-    modelName: string
-    modelDescription: string
-    createdBy: string
-    createdOn: string
-    createdByEmail: string
-    fileLocation: string
-    corpus: string
+    id: string,
+    name: string,
+    description: string,
+    userID: string,
+    createdOn: string,
+    fileLocation: string,
+    corpusID: string
 }
 
 export interface ModelsStore {
     activeModel?: string
-    models: NERModel[]
+    models: NERModelWithCreatorInfo[]
 }
 
 type Actions = ReceivedModelsAction | SetActiveModelAction;

@@ -5,7 +5,7 @@ import {appNotReady, appReady} from './appReady';
 import {uiInit} from './sagas/UIInit';
 import {putDocument} from './corpus/PutDocument';
 import {setActiveDocument} from './corpus/SetActiveDocument';
-import {trainModel} from './trainModel';
+import {trainModel} from './models/trainModel';
 import {fetchModels} from './models/FetchModels';
 import {deleteModel} from './models/DeleteModel';
 import {setActiveModel} from './models/SetActiveModel';
