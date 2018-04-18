@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {actions, DispatchProps} from '../reducers/actions';
-import {Document} from '../corpus/Document';
+import {Document} from '../document/Document';
 import {ICellRendererParams} from 'ag-grid';
 import {history} from '../History';
 

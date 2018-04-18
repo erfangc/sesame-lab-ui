@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {DocumentTagger} from './corpus/DocumentTagger';
+import {DocumentTagger} from './document/DocumentTagger';
 import {history} from './History';
 import {Header} from './header/Header';
 import {Route, Router, Switch} from 'react-router';
@@ -11,6 +11,8 @@ import {Browse} from './browse/Browse';
 import {Train} from './models/Train';
 import {Models} from './models/Models';
 import {Run} from './models/Run';
+import {CorpusEditor} from './corpus/CorpusEditor';
+import {CorpusEditorMain} from './corpus/CorpusEditorMain';
 
 interface StateProps {
     appReady: boolean
@@ -34,6 +36,8 @@ export const App = connect(mapStateToProps)(
                         <Container style={{marginTop: '7em'}}>
                             <Switch>
                                 <Route path={'/tag'} component={DocumentTagger}/>
+                                <Route path={'/edit/new'} component={CorpusEditor}/>
+                                <Route path={'/edit'} component={CorpusEditorMain}/>
                                 <Route path={'/browse'} component={Browse}/>
                                 <Route path={'/train'} component={Train}/>
                                 <Route path={'/models'} component={Models}/>

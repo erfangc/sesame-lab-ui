@@ -3,7 +3,7 @@ import {call, put, takeLatest} from 'redux-saga/effects';
 import axios, {AxiosResponse} from 'axios';
 import {apiRoot} from '../..';
 import {fetchDocuments} from './FetchDocuments';
-import {Document} from '../../corpus/Document';
+import {Document} from '../../document/Document';
 
 type PutDocument = 'PutDocument';
 const PutDocument: PutDocument = 'PutDocument';

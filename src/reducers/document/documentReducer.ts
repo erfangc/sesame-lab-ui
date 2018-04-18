@@ -1,4 +1,4 @@
-import {Document} from '../../corpus/Document';
+import {Document} from '../../document/Document';
 import {SetActiveDocument, SetActiveDocumentAction} from './SetActiveDocument';
 import {ReceivedDocuments, ReceivedDocumentsAction} from './ReceivedDocuments';
 
@@ -13,7 +13,7 @@ const initialState: CorpusStore = {
 };
 type Actions = SetActiveDocumentAction | ReceivedDocumentsAction;
 
-export function corpusReducer(state: CorpusStore = initialState, action: Actions): CorpusStore {
+export function documentReducer(state: CorpusStore = initialState, action: Actions): CorpusStore {
     switch (action.type) {
         case SetActiveDocument:
             return {...state, activeDocument: action.payload};

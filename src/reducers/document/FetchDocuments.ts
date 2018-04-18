@@ -2,7 +2,7 @@ import {Action, createAction} from 'redux-actions';
 import {call, put, takeLatest} from 'redux-saga/effects';
 import axios, {AxiosResponse} from 'axios';
 import {apiRoot} from '../../index';
-import {Document} from '../../corpus/Document';
+import {Document} from '../../document/Document';
 import {receivedDocuments} from './ReceivedDocuments';
 
 type FetchDocuments = 'FetchDocuments';

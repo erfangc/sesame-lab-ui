@@ -1,5 +1,5 @@
 import {Action, createAction} from 'redux-actions';
-import {Document} from '../../corpus/Document';
+import {Document} from '../../document/Document';
 
 type SetActiveDocument = 'SetActiveDocument';
 export const SetActiveDocument: 'SetActiveDocument' = 'SetActiveDocument';

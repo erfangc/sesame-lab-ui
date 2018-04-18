@@ -11,7 +11,7 @@ interface StateProps {
     corpusDescriptors: CorpusDescriptor[]
 }
 
-function mapStateToProps({corpusDescriptors}: StoreState): StateProps {
+function mapStateToProps({corpusDescriptors:{corpusDescriptors}}: StoreState): StateProps {
     return {corpusDescriptors};
 }
 

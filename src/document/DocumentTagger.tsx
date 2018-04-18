@@ -5,12 +5,12 @@ import {TextTagger} from '../textTagger/TextTagger';
 import {DocumentEditor} from './DocumentEditor';
 import {stripNERAnnotations} from '../ner/NERUtils';
 import {actions, DispatchProps} from '../reducers/actions';
-import {Document, TaggedEntity} from './Document';
 import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
-import {StoreState} from '../reducers';
+import {StoreState} from '../reducers/index';
 import {Legend} from './Legend';
-import {CorpusChooser} from './CorpusChooser';
+import {CorpusChooser} from '../corpus/CorpusChooser';
 import {UserProfile} from '../reducers/auth/authReducer';
+import {Document, TaggedEntity} from './Document';
 
 interface StateProps {
     corpusDescriptors: CorpusDescriptor[]
@@ -18,7 +18,7 @@ interface StateProps {
     userProfile?: UserProfile
 }
 
-function mapStateToProps({auth: {userProfile}, corpusDescriptors, corpus: {activeDocument}}: StoreState): StateProps {
+function mapStateToProps({auth: {userProfile}, corpusDescriptors: {corpusDescriptors}, corpus: {activeDocument}}: StoreState): StateProps {
     return {corpusDescriptors, activeDocument, userProfile};
 }
 

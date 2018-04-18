@@ -23,6 +23,7 @@ export const Header = connect(mapStateToProps, {...actions})(
                     </Menu.Item>
                     <Dropdown item simple text={'Corpus'}>
                         <Dropdown.Menu>
+                            <Dropdown.Item as={'a'} onClick={() => history.push('/edit')}>Edit / Create Corpus</Dropdown.Item>
                             <Dropdown.Item as={'a'} onClick={() => history.push('/tag')}>Tag Sentence</Dropdown.Item>
                             <Dropdown.Item as={'a'} onClick={() => history.push('/browse')}>Browse</Dropdown.Item>
                         </Dropdown.Menu>

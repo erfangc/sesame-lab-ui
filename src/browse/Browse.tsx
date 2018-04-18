@@ -9,7 +9,7 @@ import {CorpusChooser} from '../corpus/CorpusChooser';
 import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
 import {StoreState} from '../reducers';
 import {actions, DispatchProps} from '../reducers/actions';
-import {Document} from '../corpus/Document';
+import {Document} from '../document/Document';
 import {Edit} from './Edit';
 import {Delete} from './Delete';
 
@@ -18,7 +18,7 @@ interface StateProps {
     documents: Document[]
 }
 
-function mapStateToProps({corpusDescriptors, corpus: {documents}}: StoreState): StateProps {
+function mapStateToProps({corpusDescriptors:{corpusDescriptors}, corpus: {documents}}: StoreState): StateProps {
     return {corpusDescriptors, documents};
 }
 

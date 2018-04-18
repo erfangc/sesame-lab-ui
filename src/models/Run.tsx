@@ -8,14 +8,14 @@ import axios from 'axios';
 import {apiRoot} from '../index';
 import {TextTagger} from '../textTagger/TextTagger';
 import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
-import {Legend} from '../corpus/Legend';
+import {Legend} from '../document/Legend';
 
 interface StateProps {
     model?: NERModel
     corpusDescriptors: CorpusDescriptor[]
 }
 
-function mapStateToProps({models: {activeModel, models}, corpusDescriptors}: StoreState): StateProps {
+function mapStateToProps({models: {activeModel, models}, corpusDescriptors: {corpusDescriptors}}: StoreState): StateProps {
     const model = models.find(({model: {id}}) => id === activeModel);
     return {model: model === undefined ? undefined : model.model, corpusDescriptors};
 }

@@ -1,4 +1,4 @@
-import {Document} from '../../corpus/Document';
+import {Document} from '../../document/Document';
 import {Action, createAction} from 'redux-actions';
 
 type ReceivedDocuments = 'ReceivedDocuments';
