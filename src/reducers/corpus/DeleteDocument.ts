@@ -20,7 +20,7 @@ function* runDeleteDocument(action: DeleteDocumentAction) {
     const {payload} = action;
     if (payload !==undefined) {
         const {corpusID, id} = payload;
-        yield call(axios.delete, `${apiRoot}/api/v1/corpus/${corpusID}/${id}`);
+        yield call(axios.delete, `${apiRoot}/api/v1/document/${id}`, {params:{corpusID}});
         yield put(fetchDocuments({corpusID}));
     }
 }

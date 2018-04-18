@@ -25,7 +25,7 @@ interface PutDocumentAction {
 export const putDocument = createAction<Payload>(PutDocument);
 
 function* runPutDocument({payload: {document, onComplete}}: PutDocumentAction) {
-    const {data}: AxiosResponse<string> = yield call(axios.post, `${apiRoot}/api/v1/corpus/${document.corpus}/`, document);
+    const {data}: AxiosResponse<string> = yield call(axios.post, `${apiRoot}/api/v1/document`, document);
     if (onComplete !== undefined) {
         onComplete(data);
     }

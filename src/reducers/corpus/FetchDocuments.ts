@@ -21,7 +21,8 @@ export const fetchDocuments = createAction<Payload>(FetchDocuments);
 function* runFetchDocuments(action: FetchDocumentsAction) {
     const {payload} = action;
     if (payload !== undefined) {
-        const response: AxiosResponse<Document[]> = yield call(axios.get, `${apiRoot}/api/v1/corpus/${payload.corpusID}/by-creator`);
+        const {corpusID} = payload;
+        const response: AxiosResponse<Document[]> = yield call(axios.get, `${apiRoot}/api/v1/document/by-creator`, {params: {corpusID}});
         yield put(receivedDocuments({documents: response.data}));
     }
 }
