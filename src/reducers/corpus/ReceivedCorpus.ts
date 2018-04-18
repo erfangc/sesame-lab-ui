@@ -1,5 +1,5 @@
 import {createAction} from 'redux-actions';
-import {CorpusDescriptor} from './corpusDescriptorReducer';
+import {CorpusDescriptor} from './corpusReducer';
 
 type ReceivedCorpus = 'ReceivedCorpus';
 export const ReceivedCorpus: ReceivedCorpus = 'ReceivedCorpus';

@@ -7,7 +7,7 @@ import {Button, Divider, Form, Segment} from 'semantic-ui-react';
 import axios from 'axios';
 import {apiRoot} from '../index';
 import {TextTagger} from '../textTagger/TextTagger';
-import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
+import {CorpusDescriptor} from '../reducers/corpus/corpusReducer';
 import {Legend} from '../document/Legend';
 
 interface StateProps {
@@ -15,7 +15,7 @@ interface StateProps {
     corpusDescriptors: CorpusDescriptor[]
 }
 
-function mapStateToProps({models: {activeModel, models}, corpusDescriptors: {corpusDescriptors}}: StoreState): StateProps {
+function mapStateToProps({models: {activeModel, models}, corpus: {corpusDescriptors}}: StoreState): StateProps {
     const model = models.find(({model: {id}}) => id === activeModel);
     return {model: model === undefined ? undefined : model.model, corpusDescriptors};
 }

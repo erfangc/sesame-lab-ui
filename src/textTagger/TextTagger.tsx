@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Menu} from 'semantic-ui-react';
 import {Entity, textToToken, Token, tokenToText} from '../ner/NERUtils';
 import {guid} from '../utils/AppUtils';
-import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
+import {CorpusDescriptor} from '../reducers/corpus/corpusReducer';
 import {TaggedEntity} from '../document/Document';
 
 interface Props {

@@ -2,7 +2,7 @@ import {createAction} from 'redux-actions';
 import axios, {AxiosResponse} from 'axios';
 import {call, put, takeLatest} from 'redux-saga/effects';
 import {apiRoot} from '../../index';
-import {CorpusDescriptor} from './corpusDescriptorReducer';
+import {CorpusDescriptor} from './corpusReducer';
 import {receivedCorpus} from './ReceivedCorpus';
 
 type FetchCorpus = 'FetchCorpus';

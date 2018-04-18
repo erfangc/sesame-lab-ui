@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Button, Form} from 'semantic-ui-react';
-import {EntityConfiguration} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
+import {EntityConfiguration} from '../reducers/corpus/corpusReducer';
 import {actions, DispatchProps} from '../reducers/actions';
 
 interface StateProps {

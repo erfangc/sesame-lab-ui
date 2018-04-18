@@ -1,7 +1,7 @@
 import {authenticateSuccess} from './auth/AuthenticateSuccess';
 import {logout} from './auth/Logout';
-import {receiveCorpusDescriptors} from './corpusDescriptors/ReceiveCorpusDescriptors';
-import {appNotReady, appReady} from './appReady';
+import {receiveCorpusDescriptors} from './corpus/ReceiveCorpusDescriptors';
+import {appNotReady, setAppReady} from './appReady';
 import {uiInit} from './sagas/UIInit';
 import {putDocument} from './document/PutDocument';
 import {setActiveDocument} from './document/SetActiveDocument';
@@ -13,17 +13,23 @@ import {deleteDocument} from './document/DeleteDocument';
 import {receivedDocuments} from './document/ReceivedDocuments';
 import {fetchDocuments} from './document/FetchDocuments';
 import {updateUserProfile} from './auth/UpdateUserProfile';
-import {saveCorpus} from './corpusDescriptors/SaveCorpus';
-import {saveEntityConfiguration} from './corpusDescriptors/SaveEntityConfiguration';
-import {setActiveCorpusID} from './corpusDescriptors/SetActiveCorpusID';
-import {deleteCorpus} from './corpusDescriptors/DeleteCorpus';
-import {fetchCorpus} from './corpusDescriptors/FetchCorpus';
-import {deleteEntityConfiguration} from './corpusDescriptors/DeleteEntityConfiguration';
+import {saveCorpus} from './corpus/SaveCorpus';
+import {saveEntityConfiguration} from './corpus/SaveEntityConfiguration';
+import {setActiveCorpusID} from './corpus/SetActiveCorpusID';
+import {deleteCorpus} from './corpus/DeleteCorpus';
+import {fetchCorpus} from './corpus/FetchCorpus';
+import {deleteEntityConfiguration} from './corpus/DeleteEntityConfiguration';
+import {clearError} from './error/ClearError';
+import {setError} from './error/SetError';
+import {newCorpus} from './corpus/NewCorpus';
 
 export const actions = {
     logout,
     trainModel,
     saveCorpus,
+    setError,
+    newCorpus,
+    clearError,
     saveEntityConfiguration,
     setActiveCorpusID,
     deleteCorpus,
@@ -37,7 +43,7 @@ export const actions = {
     receivedDocuments,
     receiveCorpusDescriptors,
     authenticateSuccess,
-    appReady,
+    setAppReady,
     appNotReady,
     uiInit,
     putDocument,

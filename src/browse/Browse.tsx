@@ -6,7 +6,7 @@ import 'ag-grid/dist/styles/ag-theme-balham.css';
 import {ColDef, GridApi} from 'ag-grid';
 import {stripNERAnnotations} from '../ner/NERUtils';
 import {CorpusChooser} from '../corpus/CorpusChooser';
-import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
+import {CorpusDescriptor} from '../reducers/corpus/corpusReducer';
 import {StoreState} from '../reducers';
 import {actions, DispatchProps} from '../reducers/actions';
 import {Document} from '../document/Document';
@@ -18,7 +18,7 @@ interface StateProps {
     documents: Document[]
 }
 
-function mapStateToProps({corpusDescriptors:{corpusDescriptors}, corpus: {documents}}: StoreState): StateProps {
+function mapStateToProps({corpus:{corpusDescriptors}, documents: {documents}}: StoreState): StateProps {
     return {corpusDescriptors, documents};
 }
 

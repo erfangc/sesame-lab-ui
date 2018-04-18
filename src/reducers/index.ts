@@ -1,22 +1,25 @@
 import {authReducer, AuthStore} from './auth/authReducer';
 import {combineReducers, Reducer} from 'redux';
-import {corpusDescriptorReducer, CorpusDescriptorStore} from './corpusDescriptors/corpusDescriptorReducer';
+import {corpusReducer, CorpusStore} from './corpus/corpusReducer';
 import {appReadyReducer} from './appReady';
-import {documentReducer, CorpusStore} from './document/documentReducer';
+import {DocumentStore, documentReducer} from './document/documentReducer';
 import {modelsReducer, ModelsStore} from './models/modelsReducer';
+import {errorReducer, ErrorStore} from './error/errorReducer';
 
 export interface StoreState {
+    documents: DocumentStore
     corpus: CorpusStore
-    corpusDescriptors: CorpusDescriptorStore
     auth: AuthStore
     models: ModelsStore
     appReady: boolean
+    error: ErrorStore
 }
 
 export const rootReducer: Reducer<StoreState> = combineReducers({
-    corpus: documentReducer,
-    corpusDescriptors: corpusDescriptorReducer,
+    documents: documentReducer,
+    corpus: corpusReducer,
     auth: authReducer,
     models: modelsReducer,
-    appReady: appReadyReducer
+    appReady: appReadyReducer,
+    error: errorReducer
 });

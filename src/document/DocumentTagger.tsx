@@ -5,7 +5,7 @@ import {TextTagger} from '../textTagger/TextTagger';
 import {DocumentEditor} from './DocumentEditor';
 import {stripNERAnnotations} from '../ner/NERUtils';
 import {actions, DispatchProps} from '../reducers/actions';
-import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
+import {CorpusDescriptor} from '../reducers/corpus/corpusReducer';
 import {StoreState} from '../reducers/index';
 import {Legend} from './Legend';
 import {CorpusChooser} from '../corpus/CorpusChooser';
@@ -18,7 +18,7 @@ interface StateProps {
     userProfile?: UserProfile
 }
 
-function mapStateToProps({auth: {userProfile}, corpusDescriptors: {corpusDescriptors}, corpus: {activeDocument}}: StoreState): StateProps {
+function mapStateToProps({auth: {userProfile}, corpus: {corpusDescriptors}, documents: {activeDocument}}: StoreState): StateProps {
     return {corpusDescriptors, activeDocument, userProfile};
 }
 

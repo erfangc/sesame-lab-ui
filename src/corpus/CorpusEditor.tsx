@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Button, Divider, Form} from 'semantic-ui-react';
-import {CorpusDescriptor, EntityConfiguration} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
+import {CorpusDescriptor, EntityConfiguration} from '../reducers/corpus/corpusReducer';
 import {StoreState} from '../reducers';
 import {guid} from '../utils/AppUtils';
 import {UserProfile} from '../reducers/auth/authReducer';
-import {Corpus} from '../reducers/corpusDescriptors/SaveCorpus';
+import {Corpus} from '../reducers/corpus/SaveCorpus';
 import {actions, DispatchProps} from '../reducers/actions';
 import {EntityConfigurationEditor} from './EntityConfigurationEditor';
 import {history} from '../History';
@@ -20,7 +20,7 @@ interface State {
     entityConfigurations: EntityConfiguration[]
 }
 
-function mapStateToProps({corpusDescriptors: {activeCorpusID, corpusDescriptors}, auth: {userProfile}}: StoreState): StateProps {
+function mapStateToProps({corpus: {activeCorpusID, corpusDescriptors}, auth: {userProfile}}: StoreState): StateProps {
     const corpusDescriptor = corpusDescriptors.find(({id}) => id === activeCorpusID);
     return {corpusDescriptor, userProfile};
 }

@@ -6,11 +6,12 @@ import {watchFetchModels} from '../models/FetchModels';
 import {watchDeleteModel} from '../models/DeleteModel';
 import {watchDeleteDocument} from '../document/DeleteDocument';
 import {watchFetchDocuments} from '../document/FetchDocuments';
-import {watchSaveCorpus} from '../corpusDescriptors/SaveCorpus';
-import {watchFetchCorpus} from '../corpusDescriptors/FetchCorpus';
-import {watchSaveEntityConfiguration} from '../corpusDescriptors/SaveEntityConfiguration';
-import {watchDeleteCorpus} from '../corpusDescriptors/DeleteCorpus';
-import {watchDeleteEntityConfiguration} from '../corpusDescriptors/DeleteEntityConfiguration';
+import {watchSaveCorpus} from '../corpus/SaveCorpus';
+import {watchFetchCorpus} from '../corpus/FetchCorpus';
+import {watchSaveEntityConfiguration} from '../corpus/SaveEntityConfiguration';
+import {watchDeleteCorpus} from '../corpus/DeleteCorpus';
+import {watchDeleteEntityConfiguration} from '../corpus/DeleteEntityConfiguration';
+import {watchNewCorpus} from '../corpus/NewCorpus';
 
 export const allSagas = function* () {
     yield all(
@@ -26,7 +27,8 @@ export const allSagas = function* () {
             watchFetchCorpus(),
             watchSaveEntityConfiguration(),
             watchDeleteCorpus(),
-            watchDeleteEntityConfiguration()
+            watchDeleteEntityConfiguration(),
+            watchNewCorpus()
         ]
     );
 };

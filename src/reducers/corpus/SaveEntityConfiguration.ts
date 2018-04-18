@@ -1,5 +1,5 @@
 import {createAction} from 'redux-actions';
-import {EntityConfiguration} from './corpusDescriptorReducer';
+import {EntityConfiguration} from './corpusReducer';
 import axios, {AxiosResponse} from 'axios';
 import {call, put, takeLatest} from 'redux-saga/effects';
 import {apiRoot} from '../../index';
@@ -16,8 +16,12 @@ interface SaveEntityConfigurationAction {
 export const saveEntityConfiguration = createAction<EntityConfiguration>(SaveEntityConfiguration);
 
 function* runSaveEntityConfiguration(action: SaveEntityConfigurationAction) {
-    const response: AxiosResponse<EntityConfiguration> = yield call(axios.put, `${apiRoot}/api/v1/corpus/entity-configuration`, action.payload);
-    yield put(fetchCorpus(response.data.corpusID));
+    try {
+        const response: AxiosResponse<EntityConfiguration> = yield call(axios.put, `${apiRoot}/api/v1/corpus/entity-configuration`, action.payload);
+        yield put(fetchCorpus(response.data.corpusID));
+    } catch (e) {
+        // ignored, interceptor handles the work
+    }
 }
 
 export function* watchSaveEntityConfiguration() {

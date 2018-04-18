@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {StoreState} from '../reducers';
 import {CorpusChooser} from '../corpus/CorpusChooser';
 import {Button, Form} from 'semantic-ui-react';
-import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
+import {CorpusDescriptor} from '../reducers/corpus/corpusReducer';
 import {actions, DispatchProps} from '../reducers/actions';
 import {history} from '../History';
 
@@ -11,7 +11,7 @@ interface StateProps {
     corpusDescriptors: CorpusDescriptor[]
 }
 
-function mapStateToProps({corpusDescriptors:{corpusDescriptors}}: StoreState): StateProps {
+function mapStateToProps({corpus: {corpusDescriptors}}: StoreState): StateProps {
     return {corpusDescriptors};
 }
 

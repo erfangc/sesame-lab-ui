@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Grid, Header, Icon, Table} from 'semantic-ui-react';
 import axios from 'axios';
 import {apiRoot} from './index';
-import {CorpusDescriptor} from './reducers/corpusDescriptors/corpusDescriptorReducer';
+import {CorpusDescriptor} from './reducers/corpus/corpusReducer';
 import {StoreState} from './reducers';
 import {Pie, PieChart, Tooltip} from 'recharts';
 
@@ -16,7 +16,7 @@ interface Dashboard {
     topCorpus: { [corpusID: string]: number }
 }
 
-function mapStateToProps({corpusDescriptors:{corpusDescriptors}}: StoreState): StateProps {
+function mapStateToProps({corpus: {corpusDescriptors}}: StoreState): StateProps {
     return {corpusDescriptors};
 }
 

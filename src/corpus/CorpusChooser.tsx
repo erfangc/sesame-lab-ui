@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
+import {CorpusDescriptor} from '../reducers/corpus/corpusReducer';
 import {StoreState} from '../reducers';
 import {Dropdown, DropdownItemProps, Form} from 'semantic-ui-react';
 
@@ -16,7 +16,7 @@ interface OwnProps {
     onChange: (corpusDescriptor: CorpusDescriptor) => void
 }
 
-function mapStateToProps({corpusDescriptors:{corpusDescriptors}}: StoreState): StateProps {
+function mapStateToProps({corpus: {corpusDescriptors}}: StoreState): StateProps {
     return {corpusDescriptors};
 }
 

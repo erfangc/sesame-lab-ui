@@ -19,15 +19,15 @@ export interface CorpusDescriptor {
     entityConfigs: { [type: string]: EntityConfiguration }
 }
 
-export type CorpusDescriptorStore = {
+export type CorpusStore = {
     activeCorpusID?: string
     corpusDescriptors: CorpusDescriptor[]
 }
-const initialState: CorpusDescriptorStore = {corpusDescriptors: []};
+const initialState: CorpusStore = {corpusDescriptors: []};
 
 type Actions = ReceiveCorpusDescriptorsAction | SetActiveCorpusIDAction | ReceivedCorpusAction | DeleteCorpusAction
 
-export function corpusDescriptorReducer(state: CorpusDescriptorStore = initialState, action: Actions): CorpusDescriptorStore {
+export function corpusReducer(state: CorpusStore = initialState, action: Actions): CorpusStore {
     switch (action.type) {
         case ReceiveCorpusDescriptors:
             return {

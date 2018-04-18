@@ -1,9 +1,9 @@
 import {call, put, takeLatest} from 'redux-saga/effects';
 import axios, {AxiosResponse} from 'axios';
-import {CorpusDescriptor} from '../corpusDescriptors/corpusDescriptorReducer';
+import {CorpusDescriptor} from '../corpus/corpusReducer';
 import {createAction} from 'redux-actions';
-import {receiveCorpusDescriptors} from '../corpusDescriptors/ReceiveCorpusDescriptors';
-import {appReady} from '../appReady';
+import {receiveCorpusDescriptors} from '../corpus/ReceiveCorpusDescriptors';
+import {setAppReady} from '../appReady';
 import {apiRoot} from '../..';
 
 type UIInit = 'UIInit';
@@ -21,7 +21,7 @@ interface UIConfiguration {
 function* runUIInit() {
     const {data: {corpusDescriptors}}: AxiosResponse<UIConfiguration> = yield call(axios.get, `${apiRoot}/api/v1/ui-config`);
     yield put(receiveCorpusDescriptors(corpusDescriptors));
-    yield put(appReady());
+    yield put(setAppReady());
 }
 
 export function* watchUIInit() {

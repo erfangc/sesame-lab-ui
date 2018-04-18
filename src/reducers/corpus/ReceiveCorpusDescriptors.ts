@@ -1,4 +1,4 @@
-import {CorpusDescriptor} from './corpusDescriptorReducer';
+import {CorpusDescriptor} from './corpusReducer';
 import {Action, createAction} from 'redux-actions';
 
 type ReceiveCorpusDescriptors = 'ReceiveCorpusDescriptors';

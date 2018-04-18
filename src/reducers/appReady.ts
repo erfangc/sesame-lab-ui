@@ -5,7 +5,7 @@ const AppReady: AppReady = 'AppReady';
 interface AppReadyAction {
     type: AppReady
 }
-export const appReady = createAction(AppReady);
+export const setAppReady = createAction(AppReady);
 
 type AppNotReady = 'AppNotReady';
 const AppNotReady: AppNotReady = 'AppNotReady';

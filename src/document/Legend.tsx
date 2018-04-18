@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {CorpusDescriptor} from '../reducers/corpusDescriptors/corpusDescriptorReducer';
+import {CorpusDescriptor} from '../reducers/corpus/corpusReducer';
 import {Divider} from 'semantic-ui-react';
 
 interface LegendProps {
