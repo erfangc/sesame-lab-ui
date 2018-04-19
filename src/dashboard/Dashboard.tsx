@@ -3,13 +3,10 @@ import {connect} from 'react-redux';
 import {Grid, Header, Icon, Table} from 'semantic-ui-react';
 import axios from 'axios';
 import {apiRoot} from '../index';
-import {CorpusDescriptor} from '../reducers/corpus/corpusReducer';
-import {StoreState} from '../reducers/index';
-import {Pie, PieChart, Tooltip} from 'recharts';
 import {TopEntities} from './TopEntities';
+import {TopCorpus} from './TopCorpus';
 
 interface StateProps {
-    corpusDescriptors: CorpusDescriptor[]
 }
 
 interface DashboardObject {
@@ -18,8 +15,8 @@ interface DashboardObject {
     topEntityValue: { [entity: string]: number }
 }
 
-function mapStateToProps({corpus: {corpusDescriptors}}: StoreState): StateProps {
-    return {corpusDescriptors};
+function mapStateToProps(): StateProps {
+    return {};
 }
 
 interface State {
@@ -28,9 +25,6 @@ interface State {
 
 export const Dashboard = connect(mapStateToProps)(
     class Dashboard extends React.Component<StateProps, State> {
-
-        private topCorpusDiv: HTMLDivElement | null;
-
         constructor(props: StateProps, context: any) {
             super(props, context);
             this.state = {
@@ -49,21 +43,12 @@ export const Dashboard = connect(mapStateToProps)(
         }
 
         render(): React.ReactNode {
-            const {dashboard: {topUsers, topCorpus}} = this.state;
-            const {corpusDescriptors} = this.props;
-            const pieData = Object.keys(topCorpus).map(corpusID => {
-                const corpusDescriptor = corpusDescriptors.find(({id}) => id === corpusID);
-                return {
-                    name: !corpusDescriptor ? corpusID : corpusDescriptor.title,
-                    value: topCorpus[corpusID]
-                };
-            });
-            let pieWidth = this.topCorpusDiv != null ? this.topCorpusDiv.getBoundingClientRect().width : 535.5;
+            const {dashboard: {topUsers, topCorpus, topEntityValue}} = this.state;
             return (
                 <Grid columns={'equal'} stackable>
                     <Grid.Row>
                         <Grid.Column width={16}>
-                            <TopEntities docCounts={this.state.dashboard.topEntityValue}/>
+                            <TopEntities docCounts={topEntityValue}/>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
@@ -87,7 +72,8 @@ export const Dashboard = connect(mapStateToProps)(
                                             .map((topUser, idx) => (
                                                     <Table.Row key={topUser}>
                                                         <Table.Cell>
-                                                            {idx === 0 ? <Icon name={'favorite'} color={'yellow'}/> : <Icon/>}
+                                                            {idx === 0 ? <Icon name={'favorite'} color={'yellow'}/> :
+                                                                <Icon/>}
                                                         </Table.Cell>
                                                         <Table.Cell>{topUser}</Table.Cell>
                                                         <Table.Cell>{topUsers[topUser]}</Table.Cell>
@@ -99,29 +85,7 @@ export const Dashboard = connect(mapStateToProps)(
                                 </Table.Body>
                             </Table>
                         </Grid.Column>
-                        <Grid.Column>
-                            <div ref={ref => this.topCorpusDiv = ref}>
-                                <Header icon>
-                                    <Icon name={'line chart'} circular/>
-                                    <Header.Content>Top Corpus</Header.Content>
-                                </Header>
-                                <PieChart
-                                    width={pieWidth}
-                                    height={400}
-                                >
-                                    <Pie
-                                        data={pieData}
-                                        cx={(pieWidth) / 2}
-                                        cy={200}
-                                        label
-                                        fill="#4F52D2"
-                                        dataKey={'value'}
-                                    />
-                                    <Tooltip/>
-                                </PieChart>
-
-                            </div>
-                        </Grid.Column>
+                        <Grid.Column><TopCorpus docCounts={topCorpus}/></Grid.Column>
                     </Grid.Row>
                 </Grid>
             );
