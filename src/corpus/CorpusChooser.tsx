@@ -29,7 +29,7 @@ export const CorpusChooser = connect(mapStateToProps)(
                 value: id,
                 text: title
             }));
-            const value = !!corpusID ? corpusID : corpusDescriptors.length > 0 ? corpusDescriptors[0].id : '';
+            const value = corpusID !== undefined ? corpusID : corpusDescriptors.length > 0 ? corpusDescriptors[0].id : '';
             const formField = (
                 <Form.Field width={4}>
                     <label>{label || 'Corpus'}</label>

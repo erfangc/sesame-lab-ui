@@ -1,12 +1,11 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {Button, Container, Divider} from 'semantic-ui-react';
+import {Button, Divider} from 'semantic-ui-react';
 import {CorpusChooser} from './CorpusChooser';
 import {actions, DispatchProps} from '../reducers/actions';
 import {StoreState} from '../reducers';
 import {CorpusDescriptor} from '../reducers/corpus/corpusReducer';
 import {CorpusEditor} from './CorpusEditor';
-import {history} from '../History';
 
 interface StateProps {
     corpusDescriptor?: CorpusDescriptor
@@ -27,6 +26,7 @@ export const CorpusEditorMain = connect(mapStateToProps, {...actions})(
                         <CorpusChooser
                             onChange={({id}) => setActiveCorpusID(id)}
                             label={'Choose a Corpus to Edit'}
+                            corpusID={''}
                             standalone
                         />
                         <Divider horizontal> Or </Divider>

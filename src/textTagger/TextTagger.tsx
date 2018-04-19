@@ -18,6 +18,11 @@ interface State {
     entities: Entity[];
 }
 
+const unknownStyle = {
+    color: '#fff',
+    backgroundColor: '#666'
+};
+
 /**
  * TextTagger is a component that accepts annotated text (either annotated by an NER algorithm or by a human)
  * and enables a user to use the mouse to edit the annotations
@@ -194,7 +199,8 @@ export class TextTagger extends React.Component<Props, State> {
             const entityConfig = entityConfigs[entityUnderEdit.type];
             if (!entityConfig) {
                 return {
-                    ...baseStyle
+                    ...baseStyle,
+                    ...unknownStyle
                 };
             } else {
                 return {
@@ -220,7 +226,8 @@ export class TextTagger extends React.Component<Props, State> {
                     const entityConfiguration = entityConfigs[resolvedEntity.type];
                     if (!entityConfiguration) {
                         return {
-                            ...baseStyle
+                            ...baseStyle,
+                            ...unknownStyle
                         };
                     } else {
                         return {

@@ -6,7 +6,7 @@ import {Header} from './header/Header';
 import {Route, Router, Switch} from 'react-router';
 import {Button, Container, Icon, Modal} from 'semantic-ui-react';
 import {StoreState} from './reducers';
-import {Home} from './Home';
+import {Dashboard} from './dashboard/Dashboard';
 import {Browse} from './browse/Browse';
 import {Train} from './models/Train';
 import {Models} from './models/Models';
@@ -44,7 +44,7 @@ export const App = connect(mapStateToProps, {...actions})(
                                 <Route path={'/train'} component={Train}/>
                                 <Route path={'/models'} component={Models}/>
                                 <Route path={'/run'} component={Run}/>
-                                <Route path={'/'} component={Home}/>
+                                <Route path={'/'} component={Dashboard}/>
                             </Switch>
                         </Container>
                     </Router>
